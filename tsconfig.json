@@ -47,7 +47,7 @@
     "**/*.mts",
     "build/public/types/**/*.ts",
     "build/public/dev/types/**/*.ts"
-  ],
+, "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]
