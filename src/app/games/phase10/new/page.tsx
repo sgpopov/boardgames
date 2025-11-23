@@ -2,15 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import NewPhase10GameForm from "@/games/phase10/ui/components/CreateNewGameForm";
-import { Phase10Game } from "@/games/phase10";
+import NewPhase10GameForm from "@games/phase10/ui/components/CreateNewGameForm";
+import { Phase10Game } from "@games/phase10";
+import { routes } from "@/app/routes";
 
 export default function NewPhase10GamePage() {
   const router = useRouter();
 
   const onGameCreated = useCallback(
     (game: Phase10Game) => {
-      router.replace(`/games/phase10/${game.id}`);
+      router.replace(routes.phase10.gameDetails(game.id));
     },
     [router]
   );

@@ -1,14 +1,15 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { LocalStorageWrapper } from "@core/infrastructure/storage/LocalStorage";
+import { StorageContract } from "@core/infrastructure/storage/StorageInterface";
 import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
 
 const STORAGE_KEY = "phase10:games";
 
 export class Phase10GameRepository implements GameRepository<Phase10Game> {
-  private storage: LocalStorageWrapper;
+  private storage: StorageContract;
 
-  constructor(storage = new LocalStorageWrapper("boardgames")) {
-    this.storage = storage;
+  constructor(storage?: StorageContract) {
+    this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
   async list(): Promise<Phase10Game[]> {

@@ -7,6 +7,7 @@ import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { MinusCircleIcon, PlusCircleIcon } from "lucide-react";
 import { useRoundForm } from "@/games/phase10/ui/hooks/useRoundForm";
+import { routes } from "@/app/routes";
 
 interface ScoreRoundFormProps {
   gameId: string;
@@ -31,7 +32,7 @@ export function ScoreRoundForm({
       <div className="space-y-2">
         <p className="text-red-600">{error}</p>
 
-        <Link href={`/games/phase10/${gameId}`} className="underline">
+        <Link href={routes.phase10.gameDetails(gameId)} className="underline">
           Back
         </Link>
       </div>

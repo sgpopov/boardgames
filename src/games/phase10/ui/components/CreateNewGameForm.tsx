@@ -30,7 +30,6 @@ export function NewPhase10GameForm({ onGameCreated }: Props) {
             e.preventDefault();
             e.stopPropagation();
 
-            console.log(111);
             await form.handleSubmit();
           }}
         >
@@ -77,10 +76,17 @@ export function NewPhase10GameForm({ onGameCreated }: Props) {
             </Button>
 
             <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              selector={(state) => [
+                state.canSubmit,
+                state.isPristine,
+                state.isSubmitting,
+              ]}
             >
-              {([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit || isSubmitting}>
+              {([canSubmit, isPristine, isSubmitting]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || isPristine || isSubmitting}
+                >
                   {isSubmitting ? "Saving..." : "Create game"}
                 </Button>
               )}

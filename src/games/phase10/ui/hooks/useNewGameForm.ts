@@ -28,6 +28,7 @@ export function useNewGameForm(props: HookProps) {
     validators: {
       onChange: PlayersSchema,
       onBlur: PlayersSchema,
+      onSubmit: PlayersSchema,
     },
     onSubmit: async ({ value }) => {
       const players = value.players.map((p) => ({ name: p.name.trim() }));

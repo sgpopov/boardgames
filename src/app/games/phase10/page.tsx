@@ -9,7 +9,7 @@ import {
   DicesIcon,
 } from "lucide-react";
 import { Phase10Game } from "@games/phase10";
-import { usePhase10Repo } from "@/games/phase10/ui/hooks/usePhase10Repo";
+import { usePhase10Repo } from "@games/phase10/ui/hooks/usePhase10Repo";
 import {
   Item,
   ItemMedia,
@@ -26,6 +26,7 @@ import {
   EmptyDescription,
   EmptyContent,
 } from "@/components/ui/empty";
+import { routes } from "@/app/routes";
 
 export default function Phase10Page() {
   const [games, setGames] = useState<Phase10Game[]>([]);
@@ -63,7 +64,7 @@ export default function Phase10Page() {
 
       {games.map((game: Phase10Game) => (
         <Item key={game.id} variant="outline" size="sm" asChild>
-          <Link href={`/games/phase10/${game.id}`} className="no-underline">
+          <Link href={routes.phase10.gameDetails(game.id)} className="no-underline">
             <ItemMedia>
               {!game.completedAt && (
                 <Clock3Icon color="orange" className="size-5" />
@@ -99,7 +100,7 @@ export default function Phase10Page() {
           </EmptyHeader>
           <EmptyContent>
             <Link
-              href="/games/phase10/new"
+              href={routes.phase10.newGame()}
               className="text-sm underline self-center"
             >
               <Button>Create new game</Button>

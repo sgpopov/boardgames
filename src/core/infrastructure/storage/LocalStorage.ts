@@ -1,5 +1,7 @@
+import { StorageContract } from "./StorageInterface";
+
 // SSR-safe local storage helper
-export class LocalStorageWrapper {
+export class LocalStorageWrapper implements StorageContract {
   private namespace: string;
 
   constructor(namespace: string) {

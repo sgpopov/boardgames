@@ -1,20 +1,6 @@
-"use client";
-
-import { useCallback, useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useCallback } from "react";
 import Link from "next/link";
 import { AwardIcon, CircleAlertIcon } from "lucide-react";
-import { Phase10Game } from "@games/phase10";
-import { usePhase10Repo } from "@/games/phase10/ui/hooks/usePhase10Repo";
-import { Button } from "@/components/ui/button";
-import {
-  Item,
-  ItemContent,
-  ItemTitle,
-  ItemDescription,
-  ItemActions,
-  ItemMedia,
-} from "@/components/ui/item";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,38 +12,51 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from "@/components/ui/item";
+import { useGameDetails } from "../hooks/useGameDetails";
+import { routes } from "@/app/routes";
 
-export default function Phase10GameDetailPage() {
-  const params = useParams();
-  const router = useRouter();
-  const repo = usePhase10Repo();
-  const gameId = params?.gameId as string;
-  const [game, setGame] = useState<Phase10Game | null>(null);
+type GameDetailsProps = {
+  gameId: string;
+  onGameDeletion: () => void;
+};
 
-  useEffect(() => {
-    const fetchGame = async (id: string) => {
-      const game = await repo.getById(id);
+export function GameDetails(props: GameDetailsProps) {
+  const { game, isFetching, removeGame, getPhaseDetails } = useGameDetails(
+    props.gameId
+  );
 
-      if (!game) {
-        throw Error("Could not find game");
+  const handleGameDeletion = useCallback(
+    (gameId: string) => {
+      removeGame(gameId);
+
+      if (props.onGameDeletion) {
+        props.onGameDeletion();
       }
+    },
+    [removeGame, props]
+  );
 
-      setGame(game);
-    };
-
-    fetchGame(gameId);
-  }, [repo, gameId]);
-
-  const handleGameDeletion = useCallback(() => {
-    repo.delete(gameId);
-
-    router.replace("/games/phase10");
-  }, [repo, gameId, router]);
+  if (isFetching) {
+    return (
+      <div className="p-6 space-y-4">
+        <p>Loading game...</p>
+      </div>
+    );
+  }
 
   if (!game) {
     return (
       <div className="p-6 space-y-4">
-        <p>Loading game...</p>
+        <p>Game not found</p>
       </div>
     );
   }
@@ -68,7 +67,7 @@ export default function Phase10GameDetailPage() {
         <h2 className="text-xl font-semibold">Game details</h2>
 
         <Link
-          href={`/games/phase10/${game.id}/rounds/new`}
+          href={routes.phase10.scoreRound(game.id)}
           className="text-sm underline self-center"
         >
           <Button variant="secondary" size="sm" aria-label="Score round">
@@ -96,7 +95,7 @@ export default function Phase10GameDetailPage() {
               <ItemDescription>
                 Phase {p.phase}
                 <br />
-                {repo.getPhaseDetails(p.phase)}
+                {getPhaseDetails(p.phase)}
               </ItemDescription>
             </ItemContent>
             <ItemActions className="font-bold">{p.score}</ItemActions>
@@ -124,7 +123,7 @@ export default function Phase10GameDetailPage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-white hover:bg-destructive/90"
-                onClick={() => handleGameDeletion()}
+                onClick={() => handleGameDeletion(game.id)}
               >
                 Continue
               </AlertDialogAction>
