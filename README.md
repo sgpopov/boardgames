@@ -13,6 +13,7 @@ The following board games are supported at the moment:
 - [shadcn](https://ui.shadcn.com/) - a set of beautifully designed components
 - [Lucide](https://lucide.dev/icons/) - open-source icon library
 - [Vitest](https://vitest.dev/) for executing unit tests
+- [Playwright](https://playwright.dev/) for executing e2e tests
 
 ### High-Level Architecture
 
