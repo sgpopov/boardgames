@@ -54,7 +54,7 @@ export default function Phase10Page() {
         <div className="flex justify-between">
           <h2 className="text-xl font-semibold">Games ({games.length})</h2>
           <Link
-            href="/games/phase10/new"
+            href={routes.phase10.newGame()}
             className="text-sm underline self-center"
           >
             Create new game
