@@ -1,0 +1,8 @@
+export const routes = {
+  phase10: {
+    list: () => `/games/phase10`,
+    newGame: () => `/games/phase10/new`,
+    gameDetails: (id: string) => `/games/phase10/game?id=${id}`,
+    scoreRound: (id: string) => `/games/phase10/round-score?gameId=${id}`,
+  },
+};

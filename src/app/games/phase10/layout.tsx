@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Image from "next/image";
-import logo from "@games/phase10/ui/logo-small.jpeg";
 import Link from "next/link";
+import logo from "@games/phase10/ui/logo-small.jpeg";
+import { routes } from "@/app/routes";
 
 export const metadata: Metadata = {
   title: "Phase 10",
@@ -17,7 +19,7 @@ export default function Phase10Layout({
     <>
       <header className="p-5">
         <Link
-          href="/games/phase10"
+          href={routes.phase10.list()}
           className="flex items-center gap-5 no-underline"
         >
           <Image src={logo} alt="Phase 10" className="h-10 w-auto" />
@@ -25,7 +27,9 @@ export default function Phase10Layout({
           <h1 className="text-2xl font-semibold">Phase 10</h1>
         </Link>
       </header>
-      <main>{children}</main>
+      <main>
+        <Suspense>{children}</Suspense>
+      </main>
     </>
   );
 }
