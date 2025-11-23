@@ -63,7 +63,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          npm run release
+
+          npx --package semantic-release --package @semantic-release/git --package conventional-changelog-conventionalcommits semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
