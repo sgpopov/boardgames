@@ -8,7 +8,7 @@ const STORAGE_KEY = "phase10:games";
 export class Phase10GameRepository implements GameRepository<Phase10Game> {
   private storage: StorageContract;
 
-  constructor(storage: StorageContract) {
+  constructor(storage?: StorageContract) {
     this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
