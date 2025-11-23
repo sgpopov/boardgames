@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 3000;
 const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: "./tests/e2e",
   timeout: 30 * 1000,
   expect: { timeout: 5000 },
   fullyParallel: true,
