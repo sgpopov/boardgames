@@ -4,5 +4,7 @@ export * from "./application/useCases/createGame";
 export * from "./application/validations/players.schema";
 export * from "./infrastructure/EverdellGameRepository";
 export * from "./ui/components/CreateNewGameForm";
+export * from "./ui/components/ListGames";
 export * from "./ui/hooks/useCreateGame";
 export * from "./ui/hooks/useEverdellRepo";
+export * from "./ui/hooks/useGameList";
