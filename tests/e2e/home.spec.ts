@@ -11,7 +11,8 @@ test("homepage should list all supported games", async ({ page }) => {
     return links.map((l) => l.getAttribute("href"));
   });
 
-  expect(gameLinks).toEqual(["/games/phase10"]);
+  expect(gameLinks).toEqual(["/games/phase10", "/games/everdell"]);
 
   await expect(page.getByRole("heading", { name: "Phase 10" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Everdell" })).toBeVisible();
 });

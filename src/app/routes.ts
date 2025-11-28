@@ -8,5 +8,6 @@ export const routes = {
   everdell: {
     list: () => `/games/everdell`,
     newGame: () => `/games/everdell/create-game`,
+    gameDetails: (id: string) => `/games/everdell/game?id=${id}`,
   },
 };
