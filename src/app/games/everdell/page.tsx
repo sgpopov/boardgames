@@ -2,6 +2,10 @@
 
 import { ListEverdellGames } from "@games/everdell";
 
-export default function Phase10Page() {
-  return <ListEverdellGames />;
+export default function EverdellListPage() {
+  return (
+    <div className="p-5 space-y-4">
+      <ListEverdellGames />
+    </div>
+  );
 }

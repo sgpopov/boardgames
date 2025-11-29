@@ -16,7 +16,7 @@ export default function CreateEverdellGamePage() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="p-5 space-y-6">
       <h2 className="text-xl font-semibold">New Game</h2>
 
       <CreateNewGameForm onGameCreated={onGameCreated} />
