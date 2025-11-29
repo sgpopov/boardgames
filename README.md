@@ -5,6 +5,7 @@ This application is a modular Next.js project that serves as a companion for mul
 The following board games are supported at the moment:
 
 * **Phase 10** (https://boardgamegeek.com/boardgame/1258/phase-10)
+* **Everdell** (https://boardgamegeek.com/boardgame/199792/everdell)
 
 ### Stack
 
