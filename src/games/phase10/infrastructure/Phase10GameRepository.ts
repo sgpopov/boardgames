@@ -12,21 +12,27 @@ export class Phase10GameRepository implements GameRepository<Phase10Game> {
     this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
+  private async readAllRaw(): Promise<Phase10Game[]> {
+    return this.storage.read<Phase10Game[]>(STORAGE_KEY, []);
+  }
+
   async list(): Promise<Phase10Game[]> {
-    return this.storage
-      .read<Phase10Game[]>(STORAGE_KEY, [])
-      .sort(
-        (a, b) =>
-          new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
-      );
+    const games = await this.readAllRaw();
+
+    return games.sort(
+      (a, b) =>
+        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+    );
   }
 
   async getById(id: string): Promise<Phase10Game | undefined> {
-    return (await this.list()).find((g) => g.id === id);
+    const games = await this.readAllRaw();
+
+    return games.find((g) => g.id === id);
   }
 
   async save(game: Phase10Game): Promise<void> {
-    const games = await this.list();
+    const games = await this.readAllRaw();
     const idx = games.findIndex((g) => g.id === game.id);
 
     if (idx >= 0) {
@@ -39,7 +45,7 @@ export class Phase10GameRepository implements GameRepository<Phase10Game> {
   }
 
   async delete(id: string): Promise<void> {
-    const games = await this.list();
+    const games = await this.readAllRaw();
 
     this.storage.write(
       STORAGE_KEY,
