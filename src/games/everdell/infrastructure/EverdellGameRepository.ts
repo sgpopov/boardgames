@@ -1,7 +1,13 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { LocalStorageWrapper } from "@core/infrastructure/storage/LocalStorage";
 import { StorageContract } from "@core/infrastructure/storage/StorageInterface";
-import { EverdellGame } from "@games/everdell/application/entities/EverdellGame";
+import { EverdellGame, GameModule } from "@games/everdell";
+
+import baseIconCards from "@games/everdell/assets/icons/icon-cards.png";
+import baseIconProsperity from "@games/everdell/assets/icons/icon-prosperity.png";
+import baseIconEvents from "@games/everdell/assets/icons/icon-events.png";
+import baseIconJourney from "@games/everdell/assets/icons/icon-journey.png";
+import baseIconTokens from "@games/everdell/assets/icons/icon-tokens.png";
 
 const STORAGE_KEY = "everdell:games";
 
@@ -45,5 +51,40 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
       STORAGE_KEY,
       games.filter((g) => g.id !== id)
     );
+  }
+
+  modules(): GameModule[] {
+    return [
+      {
+        type: "base",
+        components: [
+          {
+            key: "cards",
+            title: "Cards",
+            icon: baseIconCards,
+          },
+          {
+            key: "prosperity",
+            title: "Prosperity",
+            icon: baseIconProsperity,
+          },
+          {
+            key: "events",
+            title: "Events",
+            icon: baseIconEvents,
+          },
+          {
+            key: "journey",
+            title: "Journey",
+            icon: baseIconJourney,
+          },
+          {
+            key: "tokens",
+            title: "Point tokens",
+            icon: baseIconTokens,
+          },
+        ],
+      },
+    ];
   }
 }

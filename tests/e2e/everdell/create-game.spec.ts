@@ -24,4 +24,43 @@ test("creates Everdell game", async ({ page }) => {
 
   // Wait for navigation to details page
   await expect(page).toHaveURL(/\/games\/everdell\/game\?id=/);
+
+  // Verify players are listed with initial scores
+
+  const table = page.locator("table");
+
+  // verify players names
+  const tableHeadingValues = await table
+    .locator("thead th")
+    .evaluateAll((row) => row.map((cell) => cell.textContent));
+
+  expect(tableHeadingValues).toEqual(["Player", "J", "B", "B"]);
+
+  // verify players scores for each category
+  const playersScores = await table
+    .locator("tbody tr")
+    .evaluateAll((rows) => {
+      return rows.map((row) => {
+        return Array.from(row.querySelectorAll("td")).map((cell) =>
+          cell.textContent?.trim()
+        );
+      });
+    });
+
+  expect(playersScores).not.toBeNull();
+
+  expect(playersScores).toEqual([
+    ["Cards", "0", "0", "0"],
+    ["Prosperity", "0", "0", "0"],
+    ["Events", "0", "0", "0"],
+    ["Journey", "0", "0", "0"],
+    ["Point tokens", "0", "0", "0"],
+  ]);
+
+  // verify players total score
+  const playersTotalScores = await table
+    .locator("tfoot td")
+    .evaluateAll((cells) => cells.map((cell) => cell.textContent));
+
+  expect(playersTotalScores).toEqual(["Total", "0", "0", "0"]);
 });
