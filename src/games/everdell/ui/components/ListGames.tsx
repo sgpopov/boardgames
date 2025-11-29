@@ -14,13 +14,7 @@ import {
   ItemTitle,
   ItemActions,
 } from "@/components/ui/item";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  EmptyDescription,
-} from "@/components/ui/empty";
+import { ListEmptyState } from "@/components/composite/ListEmptyState";
 import { routes } from "@/app/routes";
 import { EverdellGame, useGameList } from "@games/everdell";
 
@@ -65,18 +59,12 @@ export function ListEverdellGames() {
       ))}
 
       {games.length === 0 && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <DicesIcon />
-            </EmptyMedia>
-            <EmptyTitle>No games found</EmptyTitle>
-            <EmptyDescription>
-              You haven&apos;t created any games yet. Get started by creating
-              your first game.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <ListEmptyState
+          title="No games found"
+          description="You haven't created any games yet. Get started by creating
+              your first game."
+          icon={<DicesIcon />}
+        />
       )}
     </div>
   );
