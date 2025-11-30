@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { CreateNewGameForm, EverdellGame, useAddScore } from "@games/everdell";
+import { EverdellGame, useAddScore } from "@games/everdell";
 
 interface Props {
   gameId: string;
