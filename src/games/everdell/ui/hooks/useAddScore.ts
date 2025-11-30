@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
 import { addScore, EverdellGame, useEverdellRepo } from "@games/everdell";
 
@@ -17,20 +17,19 @@ type HookProps = {
   onScoreAdded?: (game: EverdellGame) => void;
 };
 
-export function useAddScore(props: HookProps) {
-  const { gameId, gameModule, moduleComponent, onScoreAdded } = props;
-  const repo = useEverdellRepo();
-  const modules = repo.modules();
+export function useAddScore({
+  gameId,
+  gameModule,
+  moduleComponent,
+  onScoreAdded,
+}: HookProps) {
   const [game, setGame] = useState<EverdellGame | undefined>();
   const [loading, setLoading] = useState<boolean>(true);
 
-  const selectedModule = modules.find((module) => module.type === gameModule)!;
+  const repo = useEverdellRepo();
 
-  const selectedModuleComponent = selectedModule.components.find(
-    (component) => {
-      return component.key === moduleComponent;
-    }
-  )!;
+  const { module: selectedModule, component: selectedModuleComponent } =
+    repo.getModuleComponent(gameModule, moduleComponent);
 
   const form = useForm({
     defaultValues: {
@@ -61,10 +60,12 @@ export function useAddScore(props: HookProps) {
     },
   });
 
+  const hasLoadedRef = useRef(false);
+  const formRef = useRef(form);
+
   useEffect(() => {
-    if (!selectedModule?.type || !selectedModuleComponent?.key || game) {
-      return;
-    }
+    if (hasLoadedRef.current) return;
+    if (!selectedModule?.type || !selectedModuleComponent?.key) return;
 
     (async () => {
       setLoading(true);
@@ -90,20 +91,13 @@ export function useAddScore(props: HookProps) {
           };
         });
 
-        form.setFieldValue("players", prefill);
+        formRef.current.setFieldValue("players", prefill);
       }
 
       setLoading(false);
+      hasLoadedRef.current = true;
     })();
-  }, [
-    form,
-    game,
-    gameId,
-    moduleComponent,
-    repo,
-    selectedModule,
-    selectedModuleComponent,
-  ]);
+  }, [gameId, repo, selectedModule.type, selectedModuleComponent.key]);
 
   const players = useStore(
     form.store,

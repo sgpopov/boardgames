@@ -1,7 +1,7 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { LocalStorageWrapper } from "@core/infrastructure/storage/LocalStorage";
 import { StorageContract } from "@core/infrastructure/storage/StorageInterface";
-import { EverdellGame, GameModule } from "@games/everdell";
+import { EverdellGame, GameModule, ModuleComponent } from "@games/everdell";
 
 import baseIconCards from "@games/everdell/assets/icons/icon-cards.png";
 import baseIconProsperity from "@games/everdell/assets/icons/icon-prosperity.png";
@@ -92,5 +92,31 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
         ],
       },
     ];
+  }
+
+  getModuleComponent(
+    gameModule: string,
+    moduleComponent: string
+  ): { module: GameModule; component: ModuleComponent } {
+    const selectedModule = this.modules().find((m) => m.type === gameModule)!;
+
+    if (!selectedModule) {
+      throw new Error(`Module ${gameModule} not found`);
+    }
+
+    const selectedModuleComponent = selectedModule.components.find(
+      (component) => component.key === moduleComponent
+    );
+
+    if (!selectedModuleComponent) {
+      throw new Error(
+        `Component ${moduleComponent} not found in module ${gameModule}`
+      );
+    }
+
+    return {
+      module: selectedModule,
+      component: selectedModuleComponent,
+    };
   }
 }

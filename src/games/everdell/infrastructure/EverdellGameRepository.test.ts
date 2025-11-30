@@ -111,4 +111,27 @@ describe("EverdellGameRepository", () => {
     expect(await repo.list()).toHaveLength(1);
     expect(await repo.getById("g1")).toBeDefined();
   });
+
+  describe("get module component", () => {
+    it("should return the correct module and component", () => {
+      const result = repo.getModuleComponent("base", "cards");
+
+      expect(result.module.type).toBe("base");
+      expect(result.module.components.map((c) => c.key)).toContain("cards");
+      expect(result.component.key).toBe("cards");
+      expect(result.component.title).toBe("Cards");
+    });
+
+    it("should throw when module is not found", () => {
+      expect(() => repo.getModuleComponent("nonexistent", "cards")).toThrow(
+        /Module nonexistent not found/
+      );
+    });
+
+    it("should throw when component is not found in module", () => {
+      expect(() => repo.getModuleComponent("base", "unknown")).toThrow(
+        /Component unknown not found in module base/
+      );
+    });
+  });
 });
