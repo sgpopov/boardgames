@@ -123,5 +123,5 @@
 
 /* When Everdell routes are active, tint the body background */
 body:has([data-everdell]) {
-  @apply bg-gray-100
+  @apply bg-gray-100;
 }
