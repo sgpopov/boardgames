@@ -18,21 +18,27 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
     this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
+  private async fetchAll(): Promise<EverdellGame[]> {
+    return this.storage.read<EverdellGame[]>(STORAGE_KEY, []);
+  }
+
   async list(): Promise<EverdellGame[]> {
-    return this.storage
-      .read<EverdellGame[]>(STORAGE_KEY, [])
-      .sort(
-        (a, b) =>
-          new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
-      );
+    const games = await this.fetchAll();
+
+    return games.sort(
+      (a, b) =>
+        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+    );
   }
 
   async getById(id: string): Promise<EverdellGame | undefined> {
-    return (await this.list()).find((g) => g.id === id);
+    const games = await this.fetchAll();
+
+    return games.find((g) => g.id === id);
   }
 
   async save(game: EverdellGame): Promise<void> {
-    const games = await this.list();
+    const games = await this.fetchAll();
     const idx = games.findIndex((g) => g.id === game.id);
 
     if (idx >= 0) {
@@ -45,7 +51,7 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
   }
 
   async delete(id: string): Promise<void> {
-    const games = await this.list();
+    const games = await this.fetchAll();
 
     this.storage.write(
       STORAGE_KEY,
