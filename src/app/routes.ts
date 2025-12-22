@@ -9,6 +9,13 @@ export const routes = {
     list: () => `/games/everdell`,
     newGame: () => `/games/everdell/create-game`,
     gameDetails: (id: string) => `/games/everdell/game?id=${id}`,
-    score: (id: string, component: string) => `/games/everdell/add-scores?gameId=${id}&component=${component}`,
+    score: (id: string, component: string) =>
+      `/games/everdell/add-scores?gameId=${id}&component=${component}`,
+  },
+  flip7: {
+    list: () => `/games/flip7`,
+    newGame: () => `/games/flip7/create-game`,
+    gameDetails: (id: string) => `/games/flip7/game?id=${id}`,
+    score: (id: string) => `/games/flip7/add-scores?gameId=${id}`,
   },
 };
