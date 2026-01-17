@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     "An elegant and intuitive score-tracking app designed for Flip7 board game. Perfect for family game nights, friendly competitions, and casual gaming sessions!",
 };
 
-export default function Phase10Layout({
+export default function Flip7Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;

@@ -1,6 +1,7 @@
 "use client";
 
 import { DicesIcon } from "lucide-react";
+import Link from "next/link";
 import { routes } from "@/app/routes";
 import { ListEmptyState } from "@/components/composite/ListEmptyState";
 import { useGetGames } from "../hooks/useGetGames";
@@ -30,25 +31,37 @@ export function GamesList() {
   }
 
   return (
-    <ul className="grid gap-3">
-      {games.map((g) => (
-        <li
-          key={g.id}
-          className="border rounded p-3"
-          aria-label={`Game ${g.id}`}
+    <>
+      <div className="flex justify-between pb-5">
+        <h2 className="text-xl font-semibold">Games ({games.length})</h2>
+        <Link
+          href={routes.flip7.newGame()}
+          className="text-sm underline self-center"
         >
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="font-medium">
-                Created: {new Date(g.createdAt).toLocaleString()}
-              </div>
-              <div className="text-sm text-zinc-600">
-                Players: {g.playerCount} &bull; Rounds: {g.roundsCount}
+          Create new game
+        </Link>
+      </div>
+
+      <ul className="grid gap-3">
+        {games.map((g) => (
+          <li
+            key={g.id}
+            className="border rounded p-3"
+            aria-label={`Game ${g.id}`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">
+                  Created: {new Date(g.createdAt).toLocaleString()}
+                </div>
+                <div className="text-sm text-zinc-600">
+                  Players: {g.playerCount} &bull; Rounds: {g.roundsCount}
+                </div>
               </div>
             </div>
-          </div>
-        </li>
-      ))}
-    </ul>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
