@@ -23,7 +23,7 @@ export default function Flip7Layout({
           href={routes.flip7.list()}
           className="flex items-center gap-5 no-underline"
         >
-          <Image src={logo} alt="Phase 10" className="h-14 w-auto" />
+          <Image src={logo} alt="Flip 7" className="h-14 w-auto" />
         </Link>
       </header>
       <main>

@@ -138,7 +138,7 @@ export function ScoreRoundForm({
                 if (onCancel) onCancel();
               }}
             >
-              <Link href={routes.phase10.gameDetails(gameId)}>Cancel</Link>
+              <Link href={routes.flip7.gameDetails(gameId)}>Cancel</Link>
             </Button>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}

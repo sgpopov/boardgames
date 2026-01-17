@@ -61,7 +61,7 @@ export async function addRoundScore(
     ...game,
     rounds: gameRounds,
     players,
-    completedAt: winner ? new Date().toLocaleDateString() : null,
+    completedAt: winner ? new Date().toISOString() : null,
     winnerId: winner?.id ?? null,
   };
 

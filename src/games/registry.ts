@@ -28,6 +28,6 @@ export const GAME_MODULES: GameModuleDescriptor[] = [
     id: "flip7",
     name: "Flip 7",
     image: flip7banner,
-    route: "/games/flip7",
+    route: routes.flip7.list(),
   },
 ];

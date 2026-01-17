@@ -11,17 +11,18 @@ export function GamesList() {
   const { games, gamesLoaded } = useGetGames();
 
   if (!gamesLoaded) {
-    <div className="space-y-4">
-      <p>Loading games...</p>
-    </div>;
+    return (
+      <div className="space-y-4">
+        <p>Loading games...</p>
+      </div>
+    );
   }
 
   if (!games.length) {
     return (
       <ListEmptyState
         title="No games found"
-        description="You haven't created any games yet. Get started by creating
-              your first game."
+        description="You haven't created any games yet. Get started by creating your first game."
         icon={<DicesIcon />}
         link={{
           href: routes.flip7.newGame(),
