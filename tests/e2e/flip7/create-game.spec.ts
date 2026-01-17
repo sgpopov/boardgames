@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test("creates Phase 10 game", async ({ page }) => {
+test("creates Flip7 game", async ({ page }) => {
   await page.goto("/games/flip7");
 
   // Click create new game link (exists in list or empty state)
@@ -20,4 +20,30 @@ test("creates Phase 10 game", async ({ page }) => {
 
   // Wait for navigation to details page
   await expect(page).toHaveURL(/\/games\/flip7\/game\?id=/);
+
+  await expect(
+    page.getByRole("heading", { name: "Game details" })
+  ).toBeVisible();
+
+  // Players should appear
+
+  const expectedNames = ["James Bond", "Bruce Wayne", "Barry Allen"];
+
+  const players = await page.locator("[data-slot='item']").all();
+
+  expect(players.length).toBe(3);
+
+  for (const player of players) {
+    const playerName = await player
+      .locator('[data-slot="item-title"]')
+      .textContent();
+
+    const playerScore = await player
+      .locator('[data-slot="item-actions"]')
+      .textContent();
+
+    expect(playerName, "player name").toEqual(expectedNames.shift());
+
+    expect(playerScore, "player score").toContain("0");
+  }
 });
