@@ -1,9 +1,10 @@
 "use client";
 
-import { DicesIcon } from "lucide-react";
+import { BadgeCheckIcon, Clock3Icon, DicesIcon } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/app/routes";
 import { ListEmptyState } from "@/components/composite/ListEmptyState";
+import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item";
 import { useGetGames } from "../hooks/useGetGames";
 
 export function GamesList() {
@@ -42,26 +43,29 @@ export function GamesList() {
         </Link>
       </div>
 
-      <ul className="grid gap-3">
-        {games.map((g) => (
-          <li
-            key={g.id}
-            className="border rounded p-3"
-            aria-label={`Game ${g.id}`}
+      {games.map((game) => (
+        <Item key={game.id} variant="outline" size="sm" asChild>
+          <Link
+            href={routes.flip7.gameDetails(game.id)}
+            className="no-underline"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium">
-                  Created: {new Date(g.createdAt).toLocaleString()}
-                </div>
-                <div className="text-sm text-zinc-600">
-                  Players: {g.playerCount} &bull; Rounds: {g.roundsCount}
-                </div>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            <ItemMedia>
+              {!game.completedAt && (
+                <Clock3Icon color="orange" className="size-5" />
+              )}
+              {!!game.completedAt && (
+                <BadgeCheckIcon color="green" className="size-5" />
+              )}
+            </ItemMedia>
+            <ItemContent>
+              <ItemTitle>
+                {game.playerCount} players. Started on{" "}
+                {new Date(game.createdAt).toDateString()}
+              </ItemTitle>
+            </ItemContent>
+          </Link>
+        </Item>
+      ))}
     </>
   );
 }
