@@ -27,6 +27,10 @@ export async function addRoundScore(
     throw new Error("Game not found");
   }
 
+  if (game.completedAt) {
+    throw new Error("Game already completed");
+  }
+
   const gameRounds = game.rounds;
 
   gameRounds.push({

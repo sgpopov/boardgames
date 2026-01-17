@@ -10,6 +10,7 @@ test.describe("Flip 7 Score Management", () => {
 
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();
+    await page.waitForURL("/games/flip7/game?id=**");
   });
 
   test("updates player scores and verifies the results", async ({ page }) => {
@@ -90,5 +91,39 @@ test.describe("Flip 7 Score Management", () => {
 
       expect(playerScore, "player score").toEqual(expectedScores.shift());
     }
+  });
+
+  test("prevents adding scores to a completed game", async ({ page }) => {
+    const pageUrl = new URL(page.url());
+    const gameId = pageUrl.searchParams.get("id");
+
+    // fill in player scores
+    await page.getByRole("button", { name: "Score round" }).click();
+    await page.waitForSelector("form", { state: "visible" });
+    await page.getByTestId("player-0-score").fill("201"); // winner
+    await page.getByTestId("player-1-score").fill("25");
+    await page.getByTestId("player-2-score").fill("30");
+    await page.keyboard.press("Tab");
+    await page.getByRole("button", { name: "Save Round" }).click();
+
+    // navigate directly to the round scoring page
+    await page.goto(`/games/flip7/add-scores?gameId=${gameId}`);
+
+    await page.waitForURL("/games/flip7/add-scores?gameId=**");
+
+    await expect(
+      page.getByText(
+        "This game is already completed and you cannot add round scores"
+      )
+    ).toBeVisible();
+
+    // validate that no form elements are shown
+    await expect(page.locator("form")).toHaveCount(0);
+    await expect(page.getByTestId("player-0-score")).toHaveCount(0);
+    await expect(page.getByTestId("player-1-score")).toHaveCount(0);
+    await expect(page.getByTestId("player-2-score")).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Save Round" })).toHaveCount(
+      0
+    );
   });
 });

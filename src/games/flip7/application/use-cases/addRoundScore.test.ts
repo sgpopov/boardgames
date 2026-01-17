@@ -72,6 +72,22 @@ describe("addRoundScore", () => {
     expect(repo.save).not.toHaveBeenCalled();
   });
 
+  it("throws when game is completed", async () => {
+    const game: Flip7Game = {
+      ...baseGame,
+      completedAt: new Date().toISOString(),
+      winnerId: "p1",
+    };
+
+    (repo.getById as Mock).mockResolvedValue(game);
+
+    await expect(
+      addRoundScore(repo, game.id, { players: [{ id: "p1", score: 1 }] })
+    ).rejects.toThrow("Game already completed");
+
+    expect(repo.save).not.toHaveBeenCalled();
+  });
+
   it("sets winner and completedAt when a unique player reaches >= 200", async () => {
     const game: Flip7Game = {
       ...baseGame,
@@ -80,6 +96,7 @@ describe("addRoundScore", () => {
         { id: "p2", name: "Bob", total: 150 },
       ],
     };
+
     (repo.getById as Mock).mockResolvedValue(game);
 
     const updated = await addRoundScore(repo, game.id, {

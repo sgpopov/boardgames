@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,8 +11,10 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+
 import { routes } from "@/app/routes";
 import { useRoundForm } from "../hooks/useRoundForm";
+import { AlertCircleIcon } from "lucide-react";
 
 interface ScoreRoundFormProps {
   gameId: string;
@@ -35,7 +38,7 @@ export function ScoreRoundForm({
       <div className="space-y-2">
         <p className="text-red-600">{error}</p>
 
-        <Link href={routes.phase10.gameDetails(gameId)} className="underline">
+        <Link href={routes.flip7.gameDetails(gameId)} className="underline">
           Back
         </Link>
       </div>
@@ -44,6 +47,23 @@ export function ScoreRoundForm({
 
   if (!game) {
     return null;
+  }
+
+  if (game.completedAt) {
+    return (
+      <div className="space-y-2">
+        <Alert variant="destructive">
+          <AlertCircleIcon />
+          <AlertDescription>
+            This game is already completed and you cannot add round scores
+          </AlertDescription>
+        </Alert>
+
+        <Link href={routes.flip7.gameDetails(gameId)} className="underline">
+          Go back
+        </Link>
+      </div>
+    );
   }
 
   return (
