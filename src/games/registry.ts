@@ -2,6 +2,7 @@ import { StaticImageData } from "next/image";
 import { routes } from "@/app/routes";
 import phase10Logo from "./phase10/ui/logo.jpg";
 import everdellBanner from "@games/everdell/assets/banner.jpg";
+import flip7banner from "@games/flip7/ui/assets/flip7-banner.webp";
 
 export interface GameModuleDescriptor {
   id: string;
@@ -22,5 +23,11 @@ export const GAME_MODULES: GameModuleDescriptor[] = [
     name: "Everdell",
     image: everdellBanner,
     route: routes.everdell.list(),
+  },
+  {
+    id: "flip7",
+    name: "Flip 7",
+    image: flip7banner,
+    route: routes.flip7.list(),
   },
 ];

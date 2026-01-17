@@ -6,6 +6,7 @@ The following board games are supported at the moment:
 
 * **Phase 10** (https://boardgamegeek.com/boardgame/1258/phase-10)
 * **Everdell** (https://boardgamegeek.com/boardgame/199792/everdell)
+* **Flip 7** (https://boardgamegeek.com/boardgame/420087/flip-7)
 
 ### Stack
 
