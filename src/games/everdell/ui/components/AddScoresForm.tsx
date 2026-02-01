@@ -77,8 +77,9 @@ export function AddScoresForm({
                       {(field) => (
                         <Field>
                           <Input
-                            type="number"
+                            type="text"
                             inputMode="numeric"
+                            pattern="[0-9]*"
                             id={`player-${i}-score`}
                             value={field.state.value as string}
                             onChange={(e) => field.handleChange(e.target.value)}

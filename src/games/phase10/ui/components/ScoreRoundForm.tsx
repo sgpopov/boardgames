@@ -109,7 +109,9 @@ export function ScoreRoundForm({
                       <Field>
                         <Input
                           id={`score-${player.id}`}
-                          type="number"
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           min={0}
                           step={5}
                           onChange={(e) =>
