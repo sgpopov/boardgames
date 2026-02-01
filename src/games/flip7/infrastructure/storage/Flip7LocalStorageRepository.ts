@@ -36,7 +36,7 @@ export class Flip7LocalStorageRepository implements GameRepository<Flip7Game> {
 
     return games.sort(
       (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
   }
 
@@ -64,7 +64,7 @@ export class Flip7LocalStorageRepository implements GameRepository<Flip7Game> {
 
     this.storage.write(
       STORAGE_KEY,
-      games.filter((g) => g.id !== id)
+      games.filter((g) => g.id !== id),
     );
   }
 }

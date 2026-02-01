@@ -17,5 +17,6 @@ export const routes = {
     newGame: () => `/games/flip7/create-game`,
     gameDetails: (id: string) => `/games/flip7/game?id=${id}`,
     score: (id: string) => `/games/flip7/add-scores?gameId=${id}`,
+    faq: () => `/games/flip7/faq`,
   },
 };
