@@ -112,10 +112,10 @@ export function ScoreRoundForm({
                           type="text"
                           inputMode="numeric"
                           pattern="[0-9]*"
-                          min={0}
-                          step={5}
                           onChange={(e) =>
-                            field.handleChange(Number(e.target.value))
+                            !isNaN(Number(e.target.value))
+                              ? field.handleChange(Number(e.target.value))
+                              : field.handleChange("" as unknown as number)
                           }
                           onBlur={field.handleBlur}
                           aria-invalid={!field.state.meta.isValid}

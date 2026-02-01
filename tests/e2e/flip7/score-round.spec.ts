@@ -93,6 +93,24 @@ test.describe("Flip 7 Score Management", () => {
     }
   });
 
+  test("validates form", async ({ page }) => {
+    await page.getByRole("button", { name: "Score round" }).click();
+    await page.waitForSelector("form", { state: "visible" });
+
+    await page.getByTestId("player-0-score").fill("50");
+    await page.getByTestId("player-1-score").fill("string"); // wrong input
+    await page.getByTestId("player-2-score").fill("30");
+    await page.keyboard.press("Tab");
+
+    await expect(
+      page.getByText("Invalid input: expected number, received string"),
+    ).toBeVisible();
+
+    await expect(
+      page.getByRole("button", { name: "Save Round" }),
+    ).toBeDisabled();
+  });
+
   test("prevents adding scores to a completed game", async ({ page }) => {
     const pageUrl = new URL(page.url());
     const gameId = pageUrl.searchParams.get("id");
@@ -113,8 +131,8 @@ test.describe("Flip 7 Score Management", () => {
 
     await expect(
       page.getByText(
-        "This game is already completed and you cannot add round scores"
-      )
+        "This game is already completed and you cannot add round scores",
+      ),
     ).toBeVisible();
 
     // validate that no form elements are shown
@@ -123,7 +141,7 @@ test.describe("Flip 7 Score Management", () => {
     await expect(page.getByTestId("player-1-score")).toHaveCount(0);
     await expect(page.getByTestId("player-2-score")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Save Round" })).toHaveCount(
-      0
+      0,
     );
   });
 });
