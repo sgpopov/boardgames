@@ -109,11 +109,13 @@ export function ScoreRoundForm({
                       <Field>
                         <Input
                           id={`score-${player.id}`}
-                          type="number"
-                          min={0}
-                          step={5}
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
                           onChange={(e) =>
-                            field.handleChange(Number(e.target.value))
+                            !isNaN(Number(e.target.value))
+                              ? field.handleChange(Number(e.target.value))
+                              : field.handleChange("" as unknown as number)
                           }
                           onBlur={field.handleBlur}
                           aria-invalid={!field.state.meta.isValid}
