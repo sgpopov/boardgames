@@ -1,0 +1,70 @@
+[
+  {
+    "question":
+      "You are dealt a matching number card and go bust, so you are out of the round. What do you do with your cards?",
+    "answer":
+      "Leave your cards in front of yourself, but turn them face-down to signify that you are out of the round. At the end of the round (i.e. when there are no active players left), place all your cards in the discard pile"
+  },
+  {
+    "question":
+      "During the initial deal of one card to everyone, you are dealt a Freeze card. Do you assign this card to another player right away? If so, can you assign it to a player who hasn’t yet been dealt any cards?",
+    "answer":
+      "Yes, you must assign the Freeze card right away, and yes, you can assign it to any player, even one who has not yet been dealt their first card by the dealer. This means that a player can be out of the round before even getting started in the round."
+  },
+  {
+    "question":
+      "You get dealt a Freeze card and need to assign it. Can you assign a Freeze card to yourself if you wish?",
+    "answer": "Yes"
+  },
+  {
+    "question":
+      "You are assigned a Freeze card and hence, you are frozen and out of the round. What happens to the Freeze card now? Is it discarded right away, or is it left face-up on the table? And, what happens to your other cards? Are they turned face down until the end of the round, or are they left face-up?",
+    "answer":
+      "Both the Freeze card and your other cards remain face-up on the table in front of you for the rest of the round. At the end of the round you will score your cards"
+  },
+  {
+    "question":
+      "You have used a Second Chance card to neutralize a number card that would have busted you. Is your turn done? Or does the neutralization make it as if you never received the busting card at all, so the dealer should again ask you 'Hit or stay'",
+    "answer":
+      "Your turn is done. The dealer should ask 'Hit or stay?' to the next person in line."
+  },
+  {
+    "question":
+      "You have used a Second Chance card to neutralize a duplicate number card that would have busted you. What happens to the Second Chance card and the duplicate number card?",
+    "answer":
+      "You immediately place the Second Chance card and the duplicate number card on the discard pile"
+  },
+  {
+    "question":
+      "You have a Second Chance card. You are dealt another Second Chance card. Can you keep it?",
+    "answer":
+      "No. A player can have at most ONE Second Chance card. You must assign the extra Second Chance card to an active player who does not already have a Second Chance card. If there is no active player without a Second Chance card left in the round, then you must discard the extra Second Chance card"
+  },
+  {
+    "question":
+      "There is a tie for highest score greater than or equal to 200. What do we do?",
+    "answer":
+      "Everyone (not just the tied players) plays another round. The person with the highest score after this new round wins. (The winner can be a player who was not tied for high score in the previous round.) If there is a new tie, play yet another round. Keep playing rounds until there is a unique high score greater than or equal to 200"
+  },
+  {
+    "question": "You receive the orange \"x2\" modifier card. Does this card also double your \"+\" modifier cards?",
+    "answer": "No. The \"x2\" only doubles your usual number cards (i.e. the colored number cards you can go bust with). It does NOT double the \"+2\", \"+4\", etc., cards. (In practice, when computing your score, you should sum your usual number cards first, then apply the \"x2\" modifier card if you have it, and only after this add any \"+x\" orange modifier cards that you also have.) For instance, if you end the round with 7, 11, +8, and x2, you score 44 ( = [7+11]2, then +8)"
+  },
+  {
+    "question": "The round ends with you possessing only modifier cards (i.e. the orange \"+\" cards and/or the \"x2\" card). That is, you possess none of the usual colored number cards 0-12. (This could happen, say, if you receive a Freeze card or if another player achieves a round-ending Flip 7.) Do you score anything at all for this round?",
+    "answer": "Yes, you get to score all orange \"+\" modifier cards you have. The \"x2\" card, however, scores nothing, since it only applies to the usual number cards (see Case 10 above), and you have none of those cards. (Example: You end the round with only the +2, +6, and x2 cards. Your score for the round is 8.)"
+  },
+  {
+    "question": "You are assigned and resolve a Flip 3 card. What happens to this Flip 3 card? Is that card discarded now, or is it left face-up on the table in front of you for the rest of the round?",
+    "answer": "A Flip 3 card is placed in the discard pile immediately after resolving the Flip 3 process. (This is true whether this process ends with a bust, a Flip 7, or three non-busting cards)"
+  },
+  {
+    "question": "You receive a Freeze or Flip 3 card, but you are the only active player left in the round. Do you have to assign this card to yourself?",
+    "answer": "Yes"
+  },
+  {
+    "question":
+      "While flipping cards during the resolution of a Flip 3 card, you draw a Freeze card. What happens to this?",
+    "answer": "This is handled in the same manner as drawing another Flip 3 card during a Flip 3 resolution - namely, the Freeze card is set aside until the Flip 3 has been fully resolved. If the player goes bust or completes a Flip 7, the Freeze card and the original Flip 3 card are discarded. Otherwise, after the Flip 3 is done, the player assigns the Freeze card to any active player and then discards the original Flip 3 card. (If the player who resolved the Flip 3 is the only active player remaining, then this player must assign the card to himself / herself)"
+  }
+]
