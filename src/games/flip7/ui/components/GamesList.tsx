@@ -44,29 +44,31 @@ export function GamesList() {
         </Link>
       </div>
 
-      {games.map((game) => (
-        <Item key={game.id} variant="outline" size="sm" asChild>
-          <Link
-            href={routes.flip7.gameDetails(game.id)}
-            className="no-underline"
-          >
-            <ItemMedia>
-              {!game.completedAt && (
-                <Clock3Icon color="orange" className="size-5" />
-              )}
-              {!!game.completedAt && (
-                <BadgeCheckIcon color="green" className="size-5" />
-              )}
-            </ItemMedia>
-            <ItemContent>
-              <ItemTitle>
-                {game.playerCount} players. Started on{" "}
-                {new Date(game.createdAt).toDateString()}
-              </ItemTitle>
-            </ItemContent>
-          </Link>
-        </Item>
-      ))}
+      <div className="space-y-4">
+        {games.map((game) => (
+          <Item key={game.id} variant="outline" size="sm" asChild>
+            <Link
+              href={routes.flip7.gameDetails(game.id)}
+              className="no-underline"
+            >
+              <ItemMedia>
+                {!game.completedAt && (
+                  <Clock3Icon color="orange" className="size-5" />
+                )}
+                {!!game.completedAt && (
+                  <BadgeCheckIcon color="green" className="size-5" />
+                )}
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>
+                  {game.playerCount} players. Started on{" "}
+                  {new Date(game.createdAt).toDateString()}
+                </ItemTitle>
+              </ItemContent>
+            </Link>
+          </Item>
+        ))}
+      </div>
     </>
   );
 }
