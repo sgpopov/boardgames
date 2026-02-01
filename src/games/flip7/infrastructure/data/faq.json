@@ -65,6 +65,6 @@
   {
     "question":
       "While flipping cards during the resolution of a Flip 3 card, you draw a Freeze card. What happens to this?",
-    "answer": "This is handled in the same manner as drawing another Flip 3 card during a Flip 3 resolution - namely, the Freeze card is set aside until the Flip 3 has been fully resolved. If the player goes bust or completes a Flip 7, the Freeze card and the original Flip 3 card are discarded. Otherwise, after the Flip 3 is done, the player assigns the Freeze card to any active player and then discards the original Flip 3 card. (If the player who resolved the Flip 3 is the only active player remaining, then this player must assign the card to himself / herself."
+    "answer": "This is handled in the same manner as drawing another Flip 3 card during a Flip 3 resolution - namely, the Freeze card is set aside until the Flip 3 has been fully resolved. If the player goes bust or completes a Flip 7, the Freeze card and the original Flip 3 card are discarded. Otherwise, after the Flip 3 is done, the player assigns the Freeze card to any active player and then discards the original Flip 3 card. (If the player who resolved the Flip 3 is the only active player remaining, then this player must assign the card to himself / herself)"
   }
 ]

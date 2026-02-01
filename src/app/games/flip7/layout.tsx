@@ -5,7 +5,7 @@ import Link from "next/link";
 import { routes } from "@/app/routes";
 import logo from "@games/flip7/ui/assets/logo.png";
 import { Button } from "@/components/ui/button";
-import { CircleQuestionMarkIcon } from "lucide-react";
+import { CircleHelp } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Flip 7 scoring app",
@@ -32,8 +32,12 @@ export default function Flip7Layout({
             href={routes.flip7.faq()}
             className="text-sm underline self-center"
           >
-            <Button variant="secondary" size="sm" aria-label="Score round">
-              <CircleQuestionMarkIcon />
+            <Button
+              variant="secondary"
+              size="sm"
+              aria-label="Frequently Asked Questions"
+            >
+              <CircleHelp />
               FAQ
             </Button>
           </Link>

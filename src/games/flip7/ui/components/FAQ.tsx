@@ -35,7 +35,6 @@ export function FAQ() {
         <InputGroupInput
           placeholder="Search..."
           onChange={(e) => search(e.target.value)}
-          onBlur={(e) => search(e.target.value)}
         />
         <InputGroupAddon>
           <SearchIcon />
