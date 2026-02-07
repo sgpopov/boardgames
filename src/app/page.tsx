@@ -14,13 +14,26 @@ export default function Home() {
         </p>
       </div>
 
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul
+        role="list"
+        className="mt-6 divide-y divide-gray-200 border-t border-gray-200 text-sm font-medium text-gray-500"
+      >
         {GAME_MODULES.map((m) => (
-          <li key={m.id} className="border rounded p-4 bg-white shadow-sm">
-            <Link href={m.route}>
-              <h2 className="text-xl font-medium mb-2">{m.name}</h2>
-              <Image src={m.image} alt={m.name} className="h-[45px]" />
-            </Link>
+          <li key={m.id} className="relative flex space-x-6 py-6">
+            <Image
+              src={m.image}
+              alt={m.name}
+              className="size-24 flex-none rounded-md bg-gray-100 object-cover object-center"
+            />
+            <div className="flex-auto space-y-1">
+              <h2 className="text-xl text-gray-900">
+                <Link href={m.route}>
+                  <span className="absolute inset-0" />
+                  {m.name}
+                </Link>
+              </h2>
+              <p>{m.description}</p>
+            </div>
           </li>
         ))}
       </ul>
