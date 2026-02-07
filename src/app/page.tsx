@@ -22,7 +22,7 @@ export default function Home() {
           <li key={m.id} className="relative flex space-x-6 py-6">
             <Image
               src={m.image}
-              alt="Model wearing men&#039;s charcoal basic tee in large."
+              alt={m.name}
               className="size-24 flex-none rounded-md bg-gray-100 object-cover object-center"
             />
             <div className="flex-auto space-y-1">
