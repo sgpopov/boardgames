@@ -3,9 +3,7 @@ import { test, expect } from "@playwright/test";
 test("homepage should list all supported games", async ({ page }) => {
   await page.goto("/");
 
-  await expect(
-    page.getByRole("heading", { name: "Board Game Companion" })
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Tally" })).toBeVisible();
 
   const gameLinks = await page.getByRole("link").evaluateAll((links) => {
     return links.map((l) => l.getAttribute("href"));
