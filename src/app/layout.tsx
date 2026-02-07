@@ -13,9 +13,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Board games companion",
+  title: "Tally - Board games companion app",
   description:
     "Companion app dedicated to help manage board games collection and track scores",
+  appleWebApp: {
+    capable: true,
+    title: "Tally",
+    statusBarStyle: "default",
+  },
 };
 
 export default function RootLayout({
