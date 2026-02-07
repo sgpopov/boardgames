@@ -17,7 +17,7 @@ export const GAME_MODULES: GameModuleDescriptor[] = [
     id: "phase10",
     name: "Phase 10",
     description:
-      "Collect sets and runs before your opponents to advance through ten phases of play.",
+      "Collect sets and runs before your opponents to advance through ten phases of play",
     image: phase10Logo,
     route: routes.phase10.list(),
   },
