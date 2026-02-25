@@ -1,8 +1,8 @@
 import { StaticImageData } from "next/image";
 import { routes } from "@/app/routes";
 import phase10Logo from "./phase10/ui/logo.jpg";
-import everdellBanner from "@games/everdell/assets/banner.jpg";
-import flip7banner from "@games/flip7/ui/assets/banner.png";
+import everdellBanner from "@games/everdell/assets/banner.png";
+import flip7banner from "@games/flip7/ui/assets/banner.jpg";
 
 export interface GameModuleDescriptor {
   id: string;
