@@ -81,6 +81,7 @@ export function AddScoresForm({
                             inputMode="numeric"
                             pattern="[0-9]*"
                             id={`player-${i}-score`}
+                            data-testid={`player-${i}-score`}
                             value={field.state.value as string}
                             onChange={(e) => field.handleChange(e.target.value)}
                             onBlur={field.handleBlur}
