@@ -12,24 +12,33 @@ The following board games are supported at the moment:
 
 - [Next.js](https://nextjs.org/) - React framework
 - [TanStack Form](https://tanstack.com/form/latest/docs/overview) with [Zod validations](https://zod.dev/)
-- [shadcn](https://ui.shadcn.com/) - a set of beautifully designed components
+- [shadcn](https://ui.shadcn.com/) and [Radix UI](https://www.radix-ui.com/) - a set of beautifully designed components
 - [Lucide](https://lucide.dev/icons/) - open-source icon library
 - [Vitest](https://vitest.dev/) for executing unit tests
 - [Playwright](https://playwright.dev/) for executing e2e tests
+- [TypeScript](https://www.typescriptlang.org/) - strongly types JS
+- [TailwindCSS](https://tailwindcss.com/) - utility-first CSS framework
 
 ### High-Level Architecture
 
 ```
 src/
-	core/                # Shared abstractions (entities, repositories, errors, storage)
-	games/
-		registry.ts        # List of available game modules
-		[game]/
-			application/
-			infrastructure/
-			ui/
-	app/                 # Next.js routing layer
-		games/             # Per-game entry points (UI layer entry)
+├──	core/
+|  ├── domain/
+|  |   ├── entities/        # Shared domain types/entity definitions usable across games
+|  |   ├── errors/          # Common domain error types
+|  |   ├── repositories/    # Reusable repository interface definitions (ports) not tied to a single game
+|  |   └── validation/      # Shared validation schemas/helpers
+|  └── infrastructure/      # Storage-related adapters/utilities that implement core repository contracts
+├── games/
+|  ├── registry.ts          # Registry of available game modules
+|  ├── [game]/
+|  |   ├── application/     # Holds games specific use cases and orchestration
+|  |   ├── domain/          # Defines core entities/validation and repository interfaces
+|  |   ├── infrastructure/  # Provides adapters (storage/mappers) implementing the domain repositories
+|  |   └── ui/              # Contains client components/hooks/forms that call the application layer
+├── app/                    # Next.js routing layer
+|  └── games/               # Per-game entry points (UI layer entry)
 ```
 
 Layer Responsibilities:
@@ -51,7 +60,7 @@ Layer Responsibilities:
 
 ### Local Storage Persistence
 
-Games are persisted client-side using a namespaced LocalStorage wrapper (`LocalStorageWrapper`). Each repository stores an array of games under a distinct key (`everdell:games`, `phase10:games`). This can be swapped for server APIs later by providing new repository implementations.
+Games are persisted client-side using a namespaced LocalStorage wrapper (`LocalStorageWrapper`). Each repository stores an array of games under a distinct key (e.g. `everdell:games`, `phase10:games`, etc).
 
 ### Development
 
