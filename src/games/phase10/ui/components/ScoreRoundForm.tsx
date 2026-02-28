@@ -83,10 +83,14 @@ export function ScoreRoundForm({
                       }}
                       disabled={form.getFieldValue(`players[${i}].phase`) <= 1}
                       aria-label="Decrease phase"
+                      data-testid={`player-${i}-decrease-phase`}
                     >
                       <MinusCircleIcon />
                     </Button>
-                    <span className="font-bold">
+                    <span
+                      className="font-bold"
+                      data-testid={`player-${i}-phase`}
+                    >
                       {form.getFieldValue(`players[${i}].phase`)}
                     </span>
                     <Button
@@ -98,6 +102,7 @@ export function ScoreRoundForm({
                       }}
                       disabled={form.getFieldValue(`players[${i}].phase`) >= 10}
                       aria-label="Increase phase"
+                      data-testid={`player-${i}-increase-phase`}
                     >
                       <PlusCircleIcon />
                     </Button>
@@ -109,6 +114,7 @@ export function ScoreRoundForm({
                       <Field>
                         <Input
                           id={`score-${player.id}`}
+                          data-testid={`player-${i}-score`}
                           type="text"
                           inputMode="numeric"
                           pattern="[0-9]*"

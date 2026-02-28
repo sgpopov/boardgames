@@ -1,22 +1,12 @@
-name: Validate pull request
+name: Playwright Tests
 
 on:
-  pull_request:
-    types: ["opened", "synchronize"]
-
-  # Allows you to reuse this workflow in another workflow
+  workflow_dispatch:
   workflow_call:
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-concurrency:
-  group: ${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
-  validate:
+  test:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,13 +31,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
-      - name: Tests
-        run: npm run test:unit
+      - name: Run Playwright tests
+        run: npm run test:e2e
 
-  e2e-tests:
-    needs: validate
-    uses: ./.github/workflows/playwright.yml
-    secrets: inherit
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

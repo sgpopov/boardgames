@@ -18,9 +18,9 @@ test.describe("Everdell Player Score Management", () => {
   test("updates player scores and verifies the results", async ({ page }) => {
     // fill in player scores
     await page.getByRole("link", { name: "Edit score for Cards" }).click();
-    await page.locator("#player-0-score").fill("10");
-    await page.locator("#player-1-score").fill("25");
-    await page.locator("#player-2-score").fill("30");
+    await page.getByTestId("player-0-score").fill("10");
+    await page.getByTestId("player-1-score").fill("25");
+    await page.getByTestId("player-2-score").fill("30");
     await page.getByRole("button", { name: "Save scores" }).click();
     await page.waitForSelector("table", { state: "visible" });
 
@@ -57,17 +57,17 @@ test.describe("Everdell Player Score Management", () => {
   test("updates multiple components scores", async ({ page }) => {
     // fill in scores for the "Cards" component
     await page.getByRole("link", { name: "Edit score for Cards" }).click();
-    await page.locator("#player-0-score").fill("10");
-    await page.locator("#player-1-score").fill("25");
-    await page.locator("#player-2-score").fill("30");
+    await page.getByTestId("player-0-score").fill("10");
+    await page.getByTestId("player-1-score").fill("25");
+    await page.getByTestId("player-2-score").fill("30");
     await page.getByRole("button", { name: "Save scores" }).click();
     await page.waitForSelector("table", { state: "visible" });
 
     // fill in scores for the "Prosperity" component
     await page.getByRole("link", { name: "Edit score for Prosperity" }).click();
-    await page.locator("#player-0-score").fill("0");
-    await page.locator("#player-1-score").fill("12");
-    await page.locator("#player-2-score").fill("8");
+    await page.getByTestId("player-0-score").fill("0");
+    await page.getByTestId("player-1-score").fill("12");
+    await page.getByTestId("player-2-score").fill("8");
     await page.getByRole("button", { name: "Save scores" }).click();
     await page.waitForSelector("table", { state: "visible" });
 
