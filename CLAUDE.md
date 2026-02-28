@@ -22,7 +22,7 @@
 ### How to Validate Changes (run locally)
 - Install deps: `npm install`
 - Lint: `npm run lint`
-- Unit/integration: `npm test:unit`
+- Unit/integration: `npm run test:unit`
 - E2E (headless): `npm run test:e2e`
 - E2E UI runner: `npm run test:e2e:ui`
 - Build sanity: `npm run build`
