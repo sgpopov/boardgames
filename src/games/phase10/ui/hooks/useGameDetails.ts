@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Phase10Game } from "@games/phase10";
+import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
 import { usePhase10Repo } from "@/games/phase10/ui/hooks/usePhase10Repo";
 
 export function useGameDetails(gameId: string) {

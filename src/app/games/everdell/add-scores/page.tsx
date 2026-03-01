@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { AddScoresForm } from "@games/everdell";
+import { AddScoresForm } from "@games/everdell/ui/components/AddScoresForm";
 import { useCallback } from "react";
 import { routes } from "@/app/routes";
 

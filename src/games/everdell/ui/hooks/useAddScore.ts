@@ -2,7 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
-import { addScore, EverdellGame, useEverdellRepo } from "@games/everdell";
+import { addScore } from "@/games/everdell/application/use-cases/addScore";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { useEverdellRepo } from "@/games/everdell/ui/hooks/useEverdellRepo";
 
 interface PlayerScoreRow {
   playerId: string;

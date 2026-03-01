@@ -3,11 +3,12 @@
 import { useEffect, useState, useCallback } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
 import { usePhase10Repo } from "./usePhase10Repo";
-import { Phase10Game, addPhase10Round } from "@games/phase10";
+import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
+import { addPhase10Round } from "@/games/phase10/application/use-cases/addRound";
 import {
   AddRoundSchema,
   AddRoundInput,
-} from "@/games/phase10/application/validations/rounds.schema";
+} from "@/games/phase10/domain/validation/rounds.schema";
 
 type PlayerFormRow = {
   id: string;

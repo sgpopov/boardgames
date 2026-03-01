@@ -1,6 +1,6 @@
 "use client";
 
-import { ListEverdellGames } from "@games/everdell";
+import { ListEverdellGames } from "@games/everdell/ui/components/ListGames";
 
 export default function EverdellListPage() {
   return (

@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/item";
 import { ListEmptyState } from "@/components/composite/ListEmptyState";
 import { routes } from "@/app/routes";
-import { EverdellGame, useGameList } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { useGameList } from "@/games/everdell/ui/hooks/useGameList";
 
 export function ListEverdellGames() {
   const { games, gamesLoaded } = useGameList();
@@ -39,10 +40,18 @@ export function ListEverdellGames() {
           >
             <ItemMedia>
               {!game.completedAt && (
-                <Clock3Icon color="orange" className="size-5" />
+                <Clock3Icon
+                  color="orange"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
               {!!game.completedAt && (
-                <BadgeCheckIcon color="green" className="size-5" />
+                <BadgeCheckIcon
+                  color="green"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
             </ItemMedia>
             <ItemContent>

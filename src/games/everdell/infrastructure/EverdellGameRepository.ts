@@ -1,7 +1,8 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { LocalStorageWrapper } from "@core/infrastructure/storage/LocalStorage";
 import { StorageContract } from "@core/infrastructure/storage/StorageInterface";
-import { EverdellGame, GameModule, ModuleComponent } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { GameModule, ModuleComponent } from "@/games/everdell/application/entities/GameModules";
 
 import baseIconCards from "@games/everdell/assets/icons/icon-cards.png";
 import baseIconProsperity from "@games/everdell/assets/icons/icon-prosperity.png";

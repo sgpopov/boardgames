@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { EverdellGame, useCreateGame } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { useCreateGame } from "@/games/everdell/ui/hooks/useCreateGame";
 
 interface Props {
   onGameCreated?: (game: EverdellGame) => void;

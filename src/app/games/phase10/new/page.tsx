@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import NewPhase10GameForm from "@games/phase10/ui/components/CreateNewGameForm";
-import { Phase10Game } from "@games/phase10";
+import { Phase10Game } from "@games/phase10/application/entities/Phase10Game";
 import { routes } from "@/app/routes";
 
 export default function NewPhase10GamePage() {

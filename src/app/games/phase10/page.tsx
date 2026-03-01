@@ -8,7 +8,7 @@ import {
   Clock3Icon,
   DicesIcon,
 } from "lucide-react";
-import { Phase10Game } from "@games/phase10";
+import { Phase10Game } from "@games/phase10/application/entities/Phase10Game";
 import { usePhase10Repo } from "@games/phase10/ui/hooks/usePhase10Repo";
 import {
   Item,
@@ -64,13 +64,24 @@ export default function Phase10Page() {
 
       {games.map((game: Phase10Game) => (
         <Item key={game.id} variant="outline" size="sm" asChild>
-          <Link href={routes.phase10.gameDetails(game.id)} className="no-underline">
+          <Link
+            href={routes.phase10.gameDetails(game.id)}
+            className="no-underline"
+          >
             <ItemMedia>
               {!game.completedAt && (
-                <Clock3Icon color="orange" className="size-5" />
+                <Clock3Icon
+                  color="orange"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
               {!!game.completedAt && (
-                <BadgeCheckIcon color="green" className="size-5" />
+                <BadgeCheckIcon
+                  color="green"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
             </ItemMedia>
             <ItemContent>

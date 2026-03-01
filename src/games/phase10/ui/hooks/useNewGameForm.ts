@@ -2,12 +2,9 @@
 
 import { useCallback } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
-import {
-  PlayersSchema,
-  createPhase10Game,
-  MAX_PLAYERS,
-  Phase10Game,
-} from "@games/phase10";
+import { PlayersSchema, MAX_PLAYERS } from "@/games/phase10/domain/validation/players.schema";
+import { createPhase10Game } from "@/games/phase10/application/use-cases/createGame";
+import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
 import { usePhase10Repo } from "@/games/phase10/ui/hooks/usePhase10Repo";
 
 interface PlayerRow {

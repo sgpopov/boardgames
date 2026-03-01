@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import { routes } from "@/app/routes";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/card";
 import { Field, FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { EverdellGame, useAddScore } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { useAddScore } from "@/games/everdell/ui/hooks/useAddScore";
 
 interface Props {
   gameId: string;
@@ -46,7 +47,7 @@ export function AddScoresForm({
           <CardTitle className="flex items-center gap-x-2">
             {selectedModuleComponent.icon && (
               <Image
-                src={selectedModuleComponent.icon}
+                src={selectedModuleComponent.icon as ImageProps["src"]}
                 className="w-5 h-5"
                 alt={selectedModuleComponent.title}
               />

@@ -1,5 +1,5 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
-import { EverdellGame } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 
 export class InMemoryEverdellRepo implements GameRepository<EverdellGame> {
   private game: EverdellGame | null;

@@ -1,7 +1,8 @@
 "use client";
 
 import { routes } from "@/app/routes";
-import { CreateNewGameForm, EverdellGame } from "@games/everdell";
+import { CreateNewGameForm } from "@games/everdell/ui/components/CreateNewGameForm";
+import { EverdellGame } from "@games/everdell/application/entities/EverdellGame";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
