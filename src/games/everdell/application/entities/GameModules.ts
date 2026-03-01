@@ -1,9 +1,7 @@
-import { StaticImageData } from "next/image";
-
 export type ModuleComponent = {
   key: string;
   title: string;
-  icon: string | StaticImageData;
+  icon: string | { src: string };
 };
 
 export type GameModule = {

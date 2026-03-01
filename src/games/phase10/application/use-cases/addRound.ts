@@ -3,7 +3,8 @@ import { GameRepository } from "@core/domain/repositories/GameRepository";
 import {
   validateAddRound,
   AddRoundInput,
-} from "@/games/phase10/application/validations/rounds.schema";
+} from "@/games/phase10/domain/validation/rounds.schema";
+import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
 
 export async function addPhase10Round(
   repo: GameRepository<Phase10Game>,
@@ -24,7 +25,7 @@ export async function addPhase10Round(
   const game = await repo.getById(gameId);
 
   if (!game) {
-    throw new Error("Game not found");
+    throw new GameNotFoundError();
   }
 
   const players = game.players.map((player) => {

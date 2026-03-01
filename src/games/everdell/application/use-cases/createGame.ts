@@ -2,18 +2,20 @@ import { v4 as uuidv4 } from "uuid";
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { DuplicatePlayerNameError } from "@core/domain/errors/DuplicatePlayerNameError";
 import { hasDuplicateNames } from "@core/domain/validation/uniqueNames";
-import { EverdellGame, EverdellPlayer } from "@games/everdell";
+import { EverdellGame, EverdellPlayer } from "@/games/everdell/application/entities/EverdellGame";
 
 export async function createEverdellGame(
   repo: GameRepository<EverdellGame>,
-  players: { id?: string; name: string }[]
+  players: { id?: string; name: string }[],
+  generateId: () => string = uuidv4,
+  now: () => string = () => new Date().toISOString()
 ) {
   if (hasDuplicateNames(players)) {
     throw new DuplicatePlayerNameError();
   }
 
   const gamePlayers: EverdellPlayer[] = players.map((p) => ({
-    id: p.id ?? uuidv4(),
+    id: p.id ?? generateId(),
     name: p.name,
     total: 0,
     scores: {
@@ -28,8 +30,8 @@ export async function createEverdellGame(
   }));
 
   const game: EverdellGame = {
-    id: uuidv4(),
-    startedAt: new Date().toISOString(),
+    id: generateId(),
+    startedAt: now(),
     completedAt: null,
     players: gamePlayers,
   };

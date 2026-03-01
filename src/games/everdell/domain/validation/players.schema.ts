@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getDuplicateNameGroups } from "@core/domain/validation/uniqueNames";
-import { MAX_PLAYERS_ALLOWED } from "../constants";
+import { MAX_PLAYERS_ALLOWED } from "../../application/constants";
 
 export const PlayersSchema = z.object({
   players: z

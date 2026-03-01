@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { addPhase10Round, AddRoundInput } from "@games/phase10";
+import { addPhase10Round } from "@/games/phase10/application/use-cases/addRound";
+import { AddRoundInput } from "@/games/phase10/domain/validation/rounds.schema";
 import { InMemoryPhase10Repo } from "../../tests/mock-repository";
 import { makeGame, makePlayer } from "../../tests/helpers";
 

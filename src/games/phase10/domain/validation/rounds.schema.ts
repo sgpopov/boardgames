@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PHASE_MIN, PHASE_MAX, SCORE_MIN, SCORE_STEP } from "../constants";
+import { PHASE_MIN, PHASE_MAX, SCORE_MIN, SCORE_STEP } from "../../application/constants";
 
 export const AddRoundPlayerSchema = z.object({
   id: z.string(),

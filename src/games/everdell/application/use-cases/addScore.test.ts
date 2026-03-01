@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { addScore, createEverdellGame, EverdellGame } from "@games/everdell";
+import { addScore } from "@/games/everdell/application/use-cases/addScore";
+import { createEverdellGame } from "@/games/everdell/application/use-cases/createGame";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 import { InMemoryEverdellRepo } from "@games/everdell/tests/mock-repository";
 
 function buildGameWithPlayers(names: string[]): Promise<EverdellGame> {

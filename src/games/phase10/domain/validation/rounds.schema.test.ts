@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { AddRoundSchema } from "./rounds.schema";
-import { PHASE_MIN, PHASE_MAX, SCORE_STEP } from "../constants";
+import { PHASE_MIN, PHASE_MAX, SCORE_STEP } from "../../application/constants";
 
 describe("AddRoundSchema", () => {
   it("accepts valid player scores", () => {

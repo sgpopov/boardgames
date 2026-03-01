@@ -1,5 +1,6 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
-import { EverdellGame, EverdellPlayer } from "@games/everdell";
+import { EverdellGame, EverdellPlayer } from "@/games/everdell/application/entities/EverdellGame";
+import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
 
 type AddScoreProps = {
   repository: GameRepository<EverdellGame>;
@@ -19,7 +20,7 @@ export async function addScore({
   const game = await repository.getById(gameId);
 
   if (!game) {
-    throw new Error("Game not found");
+    throw new GameNotFoundError();
   }
 
   const players = game.players.map((player) => {

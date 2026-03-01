@@ -7,20 +7,20 @@ import { hasDuplicateNames } from "@/core/domain/validation/uniqueNames";
 
 export async function createGame(
   repo: GameRepository<Flip7Game>,
-  players: CreateGameInput[]
+  players: CreateGameInput[],
+  generateId: () => string = uuidv4,
+  now: () => string = () => new Date().toISOString()
 ): Promise<Flip7Game> {
   if (hasDuplicateNames(players)) {
     throw new DuplicatePlayerNameError();
   }
 
-  const gameId = uuidv4();
-
   const game: Flip7Game = {
-    id: gameId,
-    createdAt: new Date().toISOString(),
+    id: generateId(),
+    createdAt: now(),
     completedAt: null,
     players: players.map((player) => ({
-      id: uuidv4(),
+      id: generateId(),
       name: player.name,
       total: 0,
     })),
