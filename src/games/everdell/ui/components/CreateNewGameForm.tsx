@@ -11,6 +11,26 @@ interface Props {
   onGameCreated?: (game: EverdellGame) => void;
 }
 
+function getFieldErrorMessage(errors: unknown[]): string | null {
+  const firstError = errors[0];
+
+  if (!firstError) {
+    return null;
+  }
+
+  if (typeof firstError === "string") {
+    return firstError;
+  }
+
+  if (typeof firstError === "object" && "message" in firstError) {
+    const message = (firstError as { message?: unknown }).message;
+
+    return typeof message === "string" ? message : null;
+  }
+
+  return null;
+}
+
 export function CreateNewGameForm({ onGameCreated }: Props) {
   const defaultHandler = () => {};
 
@@ -52,7 +72,7 @@ export function CreateNewGameForm({ onGameCreated }: Props) {
                       />
                       {!field.state.meta.isValid && (
                         <FieldError>
-                          {field.state.meta.errors.map((e) => e?.message)?.[0]}
+                          {getFieldErrorMessage(field.state.meta.errors)}
                         </FieldError>
                       )}
                     </Field>

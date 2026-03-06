@@ -5,21 +5,21 @@ import {
   AddRoundInput,
 } from "@/games/phase10/domain/validation/rounds.schema";
 import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
+import { ValidationError } from "@core/domain/errors/ValidationError";
 
 export async function addPhase10Round(
   repo: GameRepository<Phase10Game>,
   gameId: string,
-  scores: AddRoundInput
+  scores: AddRoundInput,
 ) {
   const validation = validateAddRound(scores);
 
   if (!validation.success) {
-    throw new Error(
-      "Invalid round input: " +
-        validation.error.issues
-          .map((i) => `${i.path.join(".")}: ${i.message}`)
-          .join("; ")
-    );
+    const details = validation.error.issues
+      .map((i) => `${i.path.join(".")}: ${i.message}`)
+      .join("; ");
+
+    throw new ValidationError("Invalid round input", details);
   }
 
   const game = await repo.getById(gameId);

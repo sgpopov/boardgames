@@ -6,18 +6,17 @@ import { v4 as uuidv4 } from "uuid";
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { MAX_PLAYERS } from "@/games/phase10/domain/validation/players.schema";
 import { DuplicatePlayerNameError } from "@core/domain/errors/DuplicatePlayerNameError";
+import { PlayersLimitExceededError } from "@core/domain/errors/PlayersLimitExceededError";
 import { hasDuplicateNames } from "@core/domain/validation/uniqueNames";
 
 export async function createPhase10Game(
   repo: GameRepository<Phase10Game>,
   players: { id?: string; name: string }[],
   generateId: () => string = uuidv4,
-  now: () => string = () => new Date().toISOString()
+  now: () => string = () => new Date().toISOString(),
 ) {
   if (players.length > MAX_PLAYERS) {
-    throw new Error(
-      `Maximum number of players exceeded. You can add up to ${MAX_PLAYERS} players`
-    );
+    throw new PlayersLimitExceededError(MAX_PLAYERS, players.length);
   }
 
   // Enforce uniqueness of player names (case-insensitive, trimmed)

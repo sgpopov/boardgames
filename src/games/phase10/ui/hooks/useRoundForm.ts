@@ -9,6 +9,7 @@ import {
   AddRoundSchema,
   AddRoundInput,
 } from "@/games/phase10/domain/validation/rounds.schema";
+import { mapErrorToMessage } from "@core/ui/errors/mapErrorToMessage";
 
 type PlayerFormRow = {
   id: string;
@@ -42,13 +43,18 @@ export function useRoundForm(gameId: string | undefined) {
         })),
       };
 
-      await addPhase10Round(repo, game.id, payload);
+      try {
+        await addPhase10Round(repo, game.id, payload);
+        setError(null);
+      } catch (submitError) {
+        setError(mapErrorToMessage(submitError, "Failed to save round"));
+      }
     },
   });
 
   const playersValues = useStore(
     form.store,
-    (s) => s.values.players
+    (s) => s.values.players,
   ) as PlayerFormRow[];
 
   useEffect(() => {
@@ -81,12 +87,10 @@ export function useRoundForm(gameId: string | undefined) {
             id: player.id,
             phase: player.phase,
             score: 0,
-          }))
+          })),
         );
       } catch (e) {
-        console.error("Failed to fetch the game", e);
-
-        setError("Failed to load game");
+        setError(mapErrorToMessage(e, "Failed to load game"));
       } finally {
         if (active) {
           setLoading(false);
@@ -108,7 +112,7 @@ export function useRoundForm(gameId: string | undefined) {
 
       form.setFieldValue(`players[${index}].phase`, next);
     },
-    [form]
+    [form],
   );
 
   return {
