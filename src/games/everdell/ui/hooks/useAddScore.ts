@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
 import { addScore } from "@/games/everdell/application/use-cases/addScore";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
@@ -62,11 +62,7 @@ export function useAddScore({
     },
   });
 
-  const hasLoadedRef = useRef(false);
-  const formRef = useRef(form);
-
   useEffect(() => {
-    if (hasLoadedRef.current) return;
     if (!selectedModule?.type || !selectedModuleComponent?.key) return;
 
     (async () => {
@@ -88,22 +84,21 @@ export function useAddScore({
             name: player.name,
             score: String(
               playerScore[selectedModule.type][selectedModuleComponent.key] ??
-                ""
+                "",
             ),
           };
         });
 
-        formRef.current.setFieldValue("players", prefill);
+        form.setFieldValue("players", prefill);
       }
 
       setLoading(false);
-      hasLoadedRef.current = true;
     })();
-  }, [gameId, repo, selectedModule.type, selectedModuleComponent.key]);
+  }, [gameId, repo, form, selectedModule.type, selectedModuleComponent.key]);
 
   const players = useStore(
     form.store,
-    (s) => s.values.players
+    (s) => s.values.players,
   ) as PlayerScoreRow[];
 
   return {
