@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PHASE_MIN, PHASE_MAX, SCORE_MIN, SCORE_STEP } from "../../application/constants";
+import { PHASE_MIN, PHASE_MAX, SCORE_MIN, SCORE_STEP } from "../constants";
 
 export const AddRoundPlayerSchema = z.object({
   id: z.string(),
@@ -14,7 +14,7 @@ export const AddRoundPlayerSchema = z.object({
     .min(SCORE_MIN, "Invalid value")
     .refine(
       (v) => v % SCORE_STEP === 0,
-      `Score must be divisible by ${SCORE_STEP}`
+      `Score must be divisible by ${SCORE_STEP}`,
     ),
 });
 

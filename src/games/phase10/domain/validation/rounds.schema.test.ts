@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { AddRoundSchema } from "./rounds.schema";
-import { PHASE_MIN, PHASE_MAX, SCORE_STEP } from "../../application/constants";
+import { PHASE_MIN, PHASE_MAX, SCORE_STEP } from "../constants";
 
 describe("AddRoundSchema", () => {
   it("accepts valid player scores", () => {
@@ -46,7 +46,7 @@ describe("AddRoundSchema", () => {
 
     expect(result.error?.issues).length(1);
     expect(result.error?.issues[0].message).toContain(
-      "Score must be divisible by"
+      "Score must be divisible by",
     );
   });
 });

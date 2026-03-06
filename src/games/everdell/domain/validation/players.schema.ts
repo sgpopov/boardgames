@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { getDuplicateNameGroups } from "@core/domain/validation/uniqueNames";
-import { MAX_PLAYERS_ALLOWED } from "../../application/constants";
+import { MAX_PLAYERS_ALLOWED } from "../constants";
 
 export const PlayersSchema = z.object({
   players: z
     .array(
       z.object({
         name: z.string().min(1, "Required"),
-      })
+      }),
     )
     .min(1, "At least one player")
     .max(MAX_PLAYERS_ALLOWED, `Max ${MAX_PLAYERS_ALLOWED} players`)

@@ -5,7 +5,7 @@ import { useForm, useStore } from "@tanstack/react-form";
 import { createEverdellGame } from "@/games/everdell/application/use-cases/createGame";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 import { PlayersSchema } from "@/games/everdell/domain/validation/players.schema";
-import { MAX_PLAYERS_ALLOWED } from "@/games/everdell/application/constants";
+import { MAX_PLAYERS_ALLOWED } from "@/games/everdell/domain/constants";
 import { useEverdellRepo } from "@/games/everdell/ui/hooks/useEverdellRepo";
 
 interface PlayerRow {
