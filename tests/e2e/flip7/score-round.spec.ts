@@ -38,7 +38,8 @@ test.describe("Flip 7 Score Management", () => {
 
     expect(players.length).toBe(3);
 
-    for (const player of players) {
+    for (let index = 0; index < players.length; index += 1) {
+      const player = players[index];
       const playerName = await player
         .locator('[data-slot="item-title"]')
         .textContent();
@@ -47,9 +48,9 @@ test.describe("Flip 7 Score Management", () => {
         .locator('[data-slot="item-actions"]')
         .textContent();
 
-      expect(playerName, "player name").toEqual(expectedNames.shift());
+      expect(playerName, "player name").toEqual(expectedNames[index]);
 
-      expect(playerScore, "player score").toEqual(expectedScores.shift());
+      expect(playerScore, "player score").toEqual(expectedScores[index]);
     }
   });
 
@@ -84,12 +85,13 @@ test.describe("Flip 7 Score Management", () => {
 
     expect(players.length).toBe(3);
 
-    for (const player of players) {
+    for (let index = 0; index < players.length; index += 1) {
+      const player = players[index];
       const playerScore = await player
         .locator('[data-slot="item-actions"]')
         .textContent();
 
-      expect(playerScore, "player score").toEqual(expectedScores.shift());
+      expect(playerScore, "player score").toEqual(expectedScores[index]);
     }
   });
 

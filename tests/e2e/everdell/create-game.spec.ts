@@ -29,38 +29,41 @@ test("creates Everdell game", async ({ page }) => {
 
   const table = page.locator("table");
 
-  // verify players names
-  const tableHeadingValues = await table
-    .locator("thead th")
-    .evaluateAll((row) => row.map((cell) => cell.textContent));
-
-  expect(tableHeadingValues).toEqual(["Player", "J", "B", "B"]);
-
-  // verify players scores for each category
-  const playersScores = await table
-    .locator("tbody tr")
-    .evaluateAll((rows) => {
-      return rows.map((row) => {
-        return Array.from(row.querySelectorAll("td")).map((cell) =>
-          cell.textContent?.trim()
-        );
-      });
-    });
-
-  expect(playersScores).not.toBeNull();
-
-  expect(playersScores).toEqual([
-    ["Cards", "0", "0", "0"],
-    ["Prosperity", "0", "0", "0"],
-    ["Events", "0", "0", "0"],
-    ["Journey", "0", "0", "0"],
-    ["Point tokens", "0", "0", "0"],
+  await expect(table.locator("thead th")).toHaveText(["Player", "J", "B", "B"]);
+  await expect(table.locator("tbody tr").nth(0).locator("td")).toHaveText([
+    "Cards",
+    "0",
+    "0",
+    "0",
   ]);
 
-  // verify players total score
-  const playersTotalScores = await table
-    .locator("tfoot td")
-    .evaluateAll((cells) => cells.map((cell) => cell.textContent));
+  await expect(table.locator("tbody tr").nth(1).locator("td")).toHaveText([
+    "Prosperity",
+    "0",
+    "0",
+    "0",
+  ]);
 
-  expect(playersTotalScores).toEqual(["Total", "0", "0", "0"]);
+  await expect(table.locator("tbody tr").nth(2).locator("td")).toHaveText([
+    "Events",
+    "0",
+    "0",
+    "0",
+  ]);
+
+  await expect(table.locator("tbody tr").nth(3).locator("td")).toHaveText([
+    "Journey",
+    "0",
+    "0",
+    "0",
+  ]);
+
+  await expect(table.locator("tbody tr").nth(4).locator("td")).toHaveText([
+    "Point tokens",
+    "0",
+    "0",
+    "0",
+  ]);
+
+  await expect(table.locator("tfoot td")).toHaveText(["Total", "0", "0", "0"]);
 });

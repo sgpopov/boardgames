@@ -56,8 +56,8 @@ describe("addRoundScore", () => {
 
   it("throws when input is invalid (empty players)", async () => {
     await expect(
-      addRoundScore(repo, baseGame.id, { players: [] })
-    ).rejects.toThrow(/Invalid round input:/);
+      addRoundScore(repo, baseGame.id, { players: [] }),
+    ).rejects.toThrow(/Invalid round input/);
 
     expect(repo.save).not.toHaveBeenCalled();
   });
@@ -66,7 +66,9 @@ describe("addRoundScore", () => {
     (repo.getById as Mock).mockResolvedValue(null);
 
     await expect(
-      addRoundScore(repo, "missing-game", { players: [{ id: "p1", score: 1 }] })
+      addRoundScore(repo, "missing-game", {
+        players: [{ id: "p1", score: 1 }],
+      }),
     ).rejects.toThrow("Game not found");
 
     expect(repo.save).not.toHaveBeenCalled();
@@ -82,7 +84,7 @@ describe("addRoundScore", () => {
     (repo.getById as Mock).mockResolvedValue(game);
 
     await expect(
-      addRoundScore(repo, game.id, { players: [{ id: "p1", score: 1 }] })
+      addRoundScore(repo, game.id, { players: [{ id: "p1", score: 1 }] }),
     ).rejects.toThrow("Game already completed");
 
     expect(repo.save).not.toHaveBeenCalled();
