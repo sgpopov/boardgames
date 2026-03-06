@@ -33,6 +33,8 @@ const makeGame = (game: Partial<EverdellGame> = {}): EverdellGame => {
 };
 
 describe("EverdellGameRepository", () => {
+  const STORAGE_KEY = "everdell:games";
+
   let storage: MockStorage;
   let repo: EverdellGameRepository;
 
@@ -124,14 +126,27 @@ describe("EverdellGameRepository", () => {
 
     it("should throw when module is not found", () => {
       expect(() => repo.getModuleComponent("nonexistent", "cards")).toThrow(
-        /Module nonexistent not found/
+        /Module nonexistent not found/,
       );
     });
 
     it("should throw when component is not found in module", () => {
       expect(() => repo.getModuleComponent("base", "unknown")).toThrow(
-        /Component unknown not found in module base/
+        /Component unknown not found in module base/,
       );
     });
+  });
+
+  it("filters out invalid records when reading from storage", async () => {
+    const valid1 = makeGame({ id: "good-1" });
+    const valid2 = makeGame({ id: "good-2" });
+    const invalid = { id: "bad", players: "wrong" } as unknown;
+
+    storage.write(STORAGE_KEY, [valid1, invalid, valid2]);
+
+    const list = await repo.list();
+
+    expect(list.map((g) => g.id).sort()).toEqual(["good-1", "good-2"]);
+    expect(await repo.getById("bad")).toBeUndefined();
   });
 });

@@ -9,15 +9,15 @@ export function useGameDetails(gameId: string) {
   const [game, setGame] = useState<Phase10Game | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
-  const removeGame = (id: string) => {
-    repo.delete(id);
+  const removeGame = async (id: string) => {
+    await repo.delete(id);
   };
 
   const getPhaseDetails = useCallback(
     (phaseNumber: number) => {
       return repo.getPhaseDetails(phaseNumber);
     },
-    [repo]
+    [repo],
   );
 
   useEffect(() => {

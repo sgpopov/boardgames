@@ -2,7 +2,14 @@ import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { LocalStorageWrapper } from "@core/infrastructure/storage/LocalStorage";
 import { StorageContract } from "@core/infrastructure/storage/StorageInterface";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
-import { GameModule, ModuleComponent } from "@/games/everdell/application/entities/GameModules";
+import {
+  GameModule,
+  ModuleComponent,
+} from "@/games/everdell/application/entities/GameModules";
+import {
+  fromStorage,
+  toStorage,
+} from "@/games/everdell/infrastructure/mappers/storageMappers";
 
 import baseIconCards from "@games/everdell/assets/icons/icon-cards.png";
 import baseIconProsperity from "@games/everdell/assets/icons/icon-prosperity.png";
@@ -14,21 +21,39 @@ const STORAGE_KEY = "everdell:games";
 
 export class EverdellGameRepository implements GameRepository<EverdellGame> {
   private storage: StorageContract;
+  private cache: EverdellGame[] | null = null;
 
   constructor(storage?: StorageContract) {
     this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
   private async fetchAll(): Promise<EverdellGame[]> {
-    return this.storage.read<EverdellGame[]>(STORAGE_KEY, []);
+    if (this.cache) {
+      return [...this.cache];
+    }
+
+    const raw = this.storage.read<unknown[]>(STORAGE_KEY, []);
+    const games: EverdellGame[] = [];
+
+    for (const item of raw) {
+      const game = fromStorage(item);
+
+      if (game) {
+        games.push(game);
+      }
+    }
+
+    this.cache = games;
+
+    return [...games];
   }
 
   async list(): Promise<EverdellGame[]> {
     const games = await this.fetchAll();
 
-    return games.sort(
+    return [...games].sort(
       (a, b) =>
-        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
     );
   }
 
@@ -41,23 +66,25 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
   async save(game: EverdellGame): Promise<void> {
     const games = await this.fetchAll();
     const idx = games.findIndex((g) => g.id === game.id);
+    const storedGame = toStorage(game);
+    const nextGames = [...games];
 
     if (idx >= 0) {
-      games[idx] = game;
+      nextGames[idx] = storedGame;
     } else {
-      games.push(game);
+      nextGames.push(storedGame);
     }
 
-    this.storage.write(STORAGE_KEY, games);
+    this.storage.write(STORAGE_KEY, nextGames);
+    this.cache = nextGames;
   }
 
   async delete(id: string): Promise<void> {
     const games = await this.fetchAll();
+    const nextGames = games.filter((g) => g.id !== id);
 
-    this.storage.write(
-      STORAGE_KEY,
-      games.filter((g) => g.id !== id)
-    );
+    this.storage.write(STORAGE_KEY, nextGames);
+    this.cache = nextGames;
   }
 
   modules(): GameModule[] {
@@ -97,7 +124,7 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
 
   getModuleComponent(
     gameModule: string,
-    moduleComponent: string
+    moduleComponent: string,
   ): { module: GameModule; component: ModuleComponent } {
     const selectedModule = this.modules().find((m) => m.type === gameModule)!;
 
@@ -106,12 +133,12 @@ export class EverdellGameRepository implements GameRepository<EverdellGame> {
     }
 
     const selectedModuleComponent = selectedModule.components.find(
-      (component) => component.key === moduleComponent
+      (component) => component.key === moduleComponent,
     );
 
     if (!selectedModuleComponent) {
       throw new Error(
-        `Component ${moduleComponent} not found in module ${gameModule}`
+        `Component ${moduleComponent} not found in module ${gameModule}`,
       );
     }
 

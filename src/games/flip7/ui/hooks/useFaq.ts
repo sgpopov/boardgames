@@ -1,27 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import faq from "../../infrastructure/data/faq.json";
-
-type FAQ = {
-  question: string;
-  answer: string;
-};
+import { getFlip7FaqItems } from "@games/flip7/composition/faq";
 
 export function useFaq() {
   const [search, setSearch] = useState("");
+  const allItems = useMemo(() => getFlip7FaqItems(), []);
 
   const items = useMemo(() => {
-    if (!search) return faq as FAQ[];
+    if (!search) return allItems;
 
     const lowerSearch = search.toLowerCase();
 
-    return (faq as FAQ[]).filter(
+    return allItems.filter(
       (item) =>
         item.question.toLowerCase().includes(lowerSearch) ||
         item.answer.toLowerCase().includes(lowerSearch),
     );
-  }, [search]);
+  }, [allItems, search]);
 
   return {
     items,

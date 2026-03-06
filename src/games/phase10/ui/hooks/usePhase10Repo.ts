@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { Phase10GameRepository } from "@/games/phase10/infrastructure/Phase10GameRepository";
+import { getPhase10Repository } from "@/games/phase10/composition/repository";
 
 export function usePhase10Repo() {
-  const repo = useMemo(() => new Phase10GameRepository(), []);
+  const repo = useMemo(() => getPhase10Repository(), []);
 
   return repo;
 }

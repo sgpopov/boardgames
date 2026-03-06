@@ -43,6 +43,8 @@ const makeGame = ({
 };
 
 describe("Phase10GameRepository", () => {
+  const STORAGE_KEY = "phase10:games";
+
   let storage: MockStorage;
   let repo: Phase10GameRepository;
 
@@ -130,5 +132,18 @@ describe("Phase10GameRepository", () => {
   it("getPhaseDetails returns fallback for invalid phase", () => {
     expect(repo.getPhaseDetails(0)).toBe("Invalid phase number");
     expect(repo.getPhaseDetails(11)).toBe("Invalid phase number");
+  });
+
+  it("filters out invalid records when reading from storage", async () => {
+    const valid1 = makeGame({ id: "good-1" });
+    const valid2 = makeGame({ id: "good-2" });
+    const invalid = { id: "bad", rounds: "wrong" } as unknown;
+
+    storage.write(STORAGE_KEY, [valid1, invalid, valid2]);
+
+    const list = await repo.list();
+
+    expect(list.map((g) => g.id).sort()).toEqual(["good-1", "good-2"]);
+    expect(await repo.getById("bad")).toBeUndefined();
   });
 });
