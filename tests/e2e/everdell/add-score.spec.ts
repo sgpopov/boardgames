@@ -18,6 +18,7 @@ test.describe("Everdell Player Score Management", () => {
 
   test("a11y smoke - scoring form", async ({ page }) => {
     await page.getByRole("link", { name: "Edit score for Cards" }).click();
+    await page.getByRole("button", { name: "Save scores" }).waitFor();
 
     const scanResults = await new AxeBuilder({ page }).analyze();
 
@@ -26,6 +27,7 @@ test.describe("Everdell Player Score Management", () => {
 
   test("a11y smoke - results page", async ({ page }) => {
     await page.getByRole("link", { name: "Edit score for Cards" }).click();
+    await page.getByRole("button", { name: "Save scores" }).waitFor();
 
     await page.getByTestId("player-0-score").fill("10");
     await page.getByTestId("player-1-score").fill("25");
@@ -43,6 +45,8 @@ test.describe("Everdell Player Score Management", () => {
   test("updates player scores and verifies the results", async ({ page }) => {
     // fill in player scores
     await page.getByRole("link", { name: "Edit score for Cards" }).click();
+    await page.getByRole("button", { name: "Save scores" }).waitFor();
+
     await page.getByTestId("player-0-score").fill("10");
     await page.getByTestId("player-1-score").fill("25");
     await page.getByTestId("player-2-score").fill("30");

@@ -52,7 +52,7 @@ export function AddScoresForm({
                 alt={selectedModuleComponent.title}
               />
             )}
-            <span>{selectedModuleComponent.title}</span>
+            <h1>{selectedModuleComponent.title}</h1>
           </CardTitle>
           <CardAction>
             <Link href={routes.everdell.gameDetails(gameId)}>Go back</Link>
