@@ -9,7 +9,7 @@ export async function createGame(
   repo: GameRepository<Flip7Game>,
   players: CreateGameInput[],
   generateId: () => string = uuidv4,
-  now: () => string = () => new Date().toISOString()
+  now: () => string = () => new Date().toISOString(),
 ): Promise<Flip7Game> {
   if (hasDuplicateNames(players)) {
     throw new DuplicatePlayerNameError();
