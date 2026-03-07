@@ -6,29 +6,10 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Flip7Game } from "../../domain/entities/game";
 import { useCreateGame } from "../hooks/useCreateGame";
+import { getFieldErrorMessage } from "@/core/ui/errors/getFieldErrorMessage";
 
 interface Props {
   onGameCreated?: (game: Flip7Game) => void;
-}
-
-function getFieldErrorMessage(errors: unknown[]): string | null {
-  const firstError = errors[0];
-
-  if (!firstError) {
-    return null;
-  }
-
-  if (typeof firstError === "string") {
-    return firstError;
-  }
-
-  if (typeof firstError === "object" && "message" in firstError) {
-    const message = (firstError as { message?: unknown }).message;
-
-    return typeof message === "string" ? message : null;
-  }
-
-  return null;
 }
 
 export function CreateFlip7GameForm({ onGameCreated }: Props) {

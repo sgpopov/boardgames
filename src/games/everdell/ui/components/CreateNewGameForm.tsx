@@ -4,31 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { getFieldErrorMessage } from "@/core/ui/errors/getFieldErrorMessage";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 import { useCreateGame } from "@/games/everdell/ui/hooks/useCreateGame";
 
 interface Props {
   onGameCreated?: (game: EverdellGame) => void;
-}
-
-function getFieldErrorMessage(errors: unknown[]): string | null {
-  const firstError = errors[0];
-
-  if (!firstError) {
-    return null;
-  }
-
-  if (typeof firstError === "string") {
-    return firstError;
-  }
-
-  if (typeof firstError === "object" && "message" in firstError) {
-    const message = (firstError as { message?: unknown }).message;
-
-    return typeof message === "string" ? message : null;
-  }
-
-  return null;
 }
 
 export function CreateNewGameForm({ onGameCreated }: Props) {
