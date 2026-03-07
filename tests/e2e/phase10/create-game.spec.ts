@@ -1,6 +1,14 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
+test("creates Phase 10 game - smoke", async ({ page }) => {
+  await page.goto("/games/phase10/new");
+
+  const scanResults = await new AxeBuilder({ page }).analyze();
+
+  expect(scanResults.violations).toEqual([]);
+});
+
 test("creates Phase 10 game", async ({ page }) => {
   await page.goto("/games/phase10");
 

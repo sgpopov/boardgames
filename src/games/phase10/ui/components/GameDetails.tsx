@@ -64,7 +64,7 @@ export function GameDetails(props: GameDetailsProps) {
   return (
     <div className="p-5 space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Game details</h2>
+        <h1 className="text-xl font-semibold">Game details</h1>
 
         <Link
           href={routes.phase10.scoreRound(game.id)}
