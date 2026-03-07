@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/item";
 import { ListEmptyState } from "@/components/composite/ListEmptyState";
 import { routes } from "@/app/routes";
-import { EverdellGame, useGameList } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { useGameList } from "@/games/everdell/ui/hooks/useGameList";
 
 export function ListEverdellGames() {
   const { games, gamesLoaded } = useGameList();
@@ -29,8 +30,20 @@ export function ListEverdellGames() {
     );
   }
 
+  if (!games.length) {
+    return (
+      <ListEmptyState
+        title="No games found"
+        description="You haven't created any games yet. Get started by creating your first game."
+        icon={<DicesIcon />}
+      />
+    );
+  }
+
   return (
     <div className="space-y-4">
+      <h1 className="text-xl font-semibold">Games ({games.length})</h1>
+
       {games.map((game: EverdellGame) => (
         <Item key={game.id} variant="outline" size="sm" asChild>
           <Link
@@ -39,10 +52,18 @@ export function ListEverdellGames() {
           >
             <ItemMedia>
               {!game.completedAt && (
-                <Clock3Icon color="orange" className="size-5" />
+                <Clock3Icon
+                  color="orange"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
               {!!game.completedAt && (
-                <BadgeCheckIcon color="green" className="size-5" />
+                <BadgeCheckIcon
+                  color="green"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
             </ItemMedia>
             <ItemContent>
@@ -57,15 +78,6 @@ export function ListEverdellGames() {
           </Link>
         </Item>
       ))}
-
-      {games.length === 0 && (
-        <ListEmptyState
-          title="No games found"
-          description="You haven't created any games yet. Get started by creating
-              your first game."
-          icon={<DicesIcon />}
-        />
-      )}
     </div>
   );
 }

@@ -2,26 +2,48 @@ import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { LocalStorageWrapper } from "@core/infrastructure/storage/LocalStorage";
 import { StorageContract } from "@core/infrastructure/storage/StorageInterface";
 import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
+import {
+  fromStorage,
+  toStorage,
+} from "@/games/phase10/infrastructure/mappers/storageMappers";
 
 const STORAGE_KEY = "phase10:games";
 
 export class Phase10GameRepository implements GameRepository<Phase10Game> {
   private storage: StorageContract;
+  private cache: Phase10Game[] | null = null;
 
   constructor(storage?: StorageContract) {
     this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
   private async readAllRaw(): Promise<Phase10Game[]> {
-    return this.storage.read<Phase10Game[]>(STORAGE_KEY, []);
+    if (this.cache) {
+      return [...this.cache];
+    }
+
+    const raw = this.storage.read<unknown[]>(STORAGE_KEY, []);
+    const games: Phase10Game[] = [];
+
+    for (const item of raw) {
+      const game = fromStorage(item);
+
+      if (game) {
+        games.push(game);
+      }
+    }
+
+    this.cache = games;
+
+    return [...games];
   }
 
   async list(): Promise<Phase10Game[]> {
     const games = await this.readAllRaw();
 
-    return games.sort(
+    return [...games].sort(
       (a, b) =>
-        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
+        new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
     );
   }
 
@@ -34,23 +56,25 @@ export class Phase10GameRepository implements GameRepository<Phase10Game> {
   async save(game: Phase10Game): Promise<void> {
     const games = await this.readAllRaw();
     const idx = games.findIndex((g) => g.id === game.id);
+    const storedGame = toStorage(game);
+    const nextGames = [...games];
 
     if (idx >= 0) {
-      games[idx] = game;
+      nextGames[idx] = storedGame;
     } else {
-      games.push(game);
+      nextGames.push(storedGame);
     }
 
-    this.storage.write(STORAGE_KEY, games);
+    this.storage.write(STORAGE_KEY, nextGames);
+    this.cache = nextGames;
   }
 
   async delete(id: string): Promise<void> {
     const games = await this.readAllRaw();
+    const nextGames = games.filter((g) => g.id !== id);
 
-    this.storage.write(
-      STORAGE_KEY,
-      games.filter((g) => g.id !== id)
-    );
+    this.storage.write(STORAGE_KEY, nextGames);
+    this.cache = nextGames;
   }
 
   getPhaseDetails(phaseNumber: number): string {

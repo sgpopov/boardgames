@@ -1,8 +1,17 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test.describe("Flip 7 FAQ", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/games/flip7/faq");
+  });
+
+  test("a11y smoke", async ({ page }) => {
+    await page.goto("/games/flip7/faq");
+
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("displays the FAQ heading, search input, and accordion items", async ({
@@ -19,7 +28,11 @@ test.describe("Flip 7 FAQ", () => {
   test("search filters accordion items", async ({ page }) => {
     // "Freeze" appears in multiple FAQ questions — should return results
     await page.getByPlaceholder("Search...").fill("Freeze");
-    const matchingTriggers = page.getByRole("button").filter({ hasText: /Freeze/ });
+
+    const matchingTriggers = page
+      .getByRole("button")
+      .filter({ hasText: /Freeze/ });
+
     await expect(matchingTriggers.first()).toBeVisible();
 
     // Gibberish should match nothing
@@ -29,7 +42,11 @@ test.describe("Flip 7 FAQ", () => {
   });
 
   test("accordion opens and collapses content", async ({ page }) => {
-    const firstTrigger = page.getByRole("button").filter({ hasText: /\?/ }).first();
+    const firstTrigger = page
+      .getByRole("button")
+      .filter({ hasText: /\?/ })
+      .first();
+
     await expect(firstTrigger).toBeVisible();
 
     // Open the first item

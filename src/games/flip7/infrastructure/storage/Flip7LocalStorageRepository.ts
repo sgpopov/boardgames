@@ -11,12 +11,17 @@ const STORAGE_KEY = "flip7:games";
 
 export class Flip7LocalStorageRepository implements GameRepository<Flip7Game> {
   private storage: StorageContract;
+  private cache: Flip7Game[] | null = null;
 
   constructor(storage?: StorageContract) {
     this.storage = storage ?? new LocalStorageWrapper("boardgames");
   }
 
   private async readAllRaw(): Promise<Flip7Game[]> {
+    if (this.cache) {
+      return [...this.cache];
+    }
+
     const raw = this.storage.read<unknown[]>(STORAGE_KEY, []);
     const games: Flip7Game[] = [];
 
@@ -28,13 +33,15 @@ export class Flip7LocalStorageRepository implements GameRepository<Flip7Game> {
       }
     }
 
-    return games;
+    this.cache = games;
+
+    return [...games];
   }
 
   async list(): Promise<Flip7Game[]> {
     const games = await this.readAllRaw();
 
-    return games.sort(
+    return [...games].sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
@@ -49,22 +56,24 @@ export class Flip7LocalStorageRepository implements GameRepository<Flip7Game> {
   async save(game: Flip7Game): Promise<void> {
     const games = await this.readAllRaw();
     const idx = games.findIndex((g) => g.id === game.id);
+    const nextGames = [...games];
+    const storedGame = toStorage(game);
 
     if (idx >= 0) {
-      games[idx] = toStorage(game);
+      nextGames[idx] = storedGame;
     } else {
-      games.push(toStorage(game));
+      nextGames.push(storedGame);
     }
 
-    this.storage.write(STORAGE_KEY, games);
+    this.storage.write(STORAGE_KEY, nextGames);
+    this.cache = nextGames;
   }
 
   async delete(id: string): Promise<void> {
     const games = await this.readAllRaw();
+    const nextGames = games.filter((g) => g.id !== id);
 
-    this.storage.write(
-      STORAGE_KEY,
-      games.filter((g) => g.id !== id),
-    );
+    this.storage.write(STORAGE_KEY, nextGames);
+    this.cache = nextGames;
   }
 }

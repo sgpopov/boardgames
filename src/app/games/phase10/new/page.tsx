@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import NewPhase10GameForm from "@games/phase10/ui/components/CreateNewGameForm";
-import { Phase10Game } from "@games/phase10";
+import { Phase10Game } from "@games/phase10/application/entities/Phase10Game";
 import { routes } from "@/app/routes";
 
 export default function NewPhase10GamePage() {
@@ -13,12 +13,12 @@ export default function NewPhase10GamePage() {
     (game: Phase10Game) => {
       router.replace(routes.phase10.gameDetails(game.id));
     },
-    [router]
+    [router],
   );
 
   return (
     <div className="p-5 space-y-6">
-      <h2 className="text-xl font-semibold">New Game</h2>
+      <h1 className="text-xl font-semibold">New Game</h1>
 
       <NewPhase10GameForm onGameCreated={onGameCreated} />
     </div>

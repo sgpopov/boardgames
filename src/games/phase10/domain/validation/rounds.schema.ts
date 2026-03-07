@@ -14,7 +14,7 @@ export const AddRoundPlayerSchema = z.object({
     .min(SCORE_MIN, "Invalid value")
     .refine(
       (v) => v % SCORE_STEP === 0,
-      `Score must be divisible by ${SCORE_STEP}`
+      `Score must be divisible by ${SCORE_STEP}`,
     ),
 });
 

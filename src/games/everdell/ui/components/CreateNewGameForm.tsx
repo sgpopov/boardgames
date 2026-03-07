@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { EverdellGame, useCreateGame } from "@games/everdell";
+import { getFieldErrorMessage } from "@/core/ui/errors/getFieldErrorMessage";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { useCreateGame } from "@/games/everdell/ui/hooks/useCreateGame";
 
 interface Props {
   onGameCreated?: (game: EverdellGame) => void;
@@ -51,7 +53,7 @@ export function CreateNewGameForm({ onGameCreated }: Props) {
                       />
                       {!field.state.meta.isValid && (
                         <FieldError>
-                          {field.state.meta.errors.map((e) => e?.message)?.[0]}
+                          {getFieldErrorMessage(field.state.meta.errors)}
                         </FieldError>
                       )}
                     </Field>

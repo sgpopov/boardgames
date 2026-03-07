@@ -6,6 +6,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useNewGameForm } from "@/games/phase10/ui/hooks/useNewGameForm";
 import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
+import { getFieldErrorMessage } from "@/core/ui/errors/getFieldErrorMessage";
 
 interface Props {
   onGameCreated?: (game: Phase10Game) => void;
@@ -52,7 +53,7 @@ export function NewPhase10GameForm({ onGameCreated }: Props) {
                       />
                       {!field.state.meta.isValid && (
                         <FieldError>
-                          {field.state.meta.errors.map((e) => e?.message)?.[0]}
+                          {getFieldErrorMessage(field.state.meta.errors)}
                         </FieldError>
                       )}
                     </Field>

@@ -31,18 +31,18 @@ type GameDetailsProps = {
 
 export function GameDetails(props: GameDetailsProps) {
   const { game, isFetching, removeGame, getPhaseDetails } = useGameDetails(
-    props.gameId
+    props.gameId,
   );
 
   const handleGameDeletion = useCallback(
-    (gameId: string) => {
-      removeGame(gameId);
+    async (gameId: string) => {
+      await removeGame(gameId);
 
       if (props.onGameDeletion) {
         props.onGameDeletion();
       }
     },
-    [removeGame, props]
+    [removeGame, props],
   );
 
   if (isFetching) {
@@ -64,7 +64,7 @@ export function GameDetails(props: GameDetailsProps) {
   return (
     <div className="p-5 space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Game details</h2>
+        <h1 className="text-xl font-semibold">Game details</h1>
 
         <Link
           href={routes.phase10.scoreRound(game.id)}
@@ -123,7 +123,9 @@ export function GameDetails(props: GameDetailsProps) {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive text-white hover:bg-destructive/90"
-                onClick={() => handleGameDeletion(game.id)}
+                onClick={async () => {
+                  await handleGameDeletion(game.id);
+                }}
               >
                 Continue
               </AlertDialogAction>

@@ -46,7 +46,7 @@ describe("AddRoundSchema", () => {
 
     expect(result.error?.issues).length(1);
     expect(result.error?.issues[0].message).toContain(
-      "Score must be divisible by"
+      "Score must be divisible by",
     );
   });
 });

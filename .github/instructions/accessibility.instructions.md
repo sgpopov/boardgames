@@ -14,7 +14,6 @@ Target level: WCAG 2.2 AA. Avoid introducing AAA-only requirements unless trivia
 ---
 ## 2. Semantic Structure
 - Use proper landmarks: `<header>`, `<nav>`, `<main>`, `<aside>`, `<footer>`. Only one `<main>` per page.
-- Provide a skip link (`<a href="#main" class="sr-only focus:not-sr-only">Skip to main content</a>`) as first interactive element.
 - Heading hierarchy strictly descending without skipping levels for styling. Use Tailwind classes to style instead of incorrect heading level.
 - Lists (`<ul>`, `<ol>`) and tables (`<table>`) only when data is semantically list or tabular.
 - Avoid `div` / `span` for interactive elements; use `<button>`, `<a>`, `<input>`, etc.

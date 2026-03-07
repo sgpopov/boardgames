@@ -1,10 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
-import { EverdellGameRepository } from "@games/everdell";
+import { getEverdellRepository } from "@/games/everdell/composition/repository";
 
 export function useEverdellRepo() {
-  const repo = useMemo(() => new EverdellGameRepository(), []);
+  const repo = useMemo(() => getEverdellRepository(), []);
 
   return repo;
 }

@@ -6,6 +6,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Flip7Game } from "../../domain/entities/game";
 import { useCreateGame } from "../hooks/useCreateGame";
+import { getFieldErrorMessage } from "@/core/ui/errors/getFieldErrorMessage";
 
 interface Props {
   onGameCreated?: (game: Flip7Game) => void;
@@ -52,7 +53,7 @@ export function CreateFlip7GameForm({ onGameCreated }: Props) {
                       />
                       {!field.state.meta.isValid && (
                         <FieldError>
-                          {field.state.meta.errors.map((e) => e?.message)?.[0]}
+                          {getFieldErrorMessage(field.state.meta.errors)}
                         </FieldError>
                       )}
                     </Field>

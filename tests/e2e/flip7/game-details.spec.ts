@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test.describe("Flip 7 Game Details", () => {
@@ -10,7 +11,13 @@ test.describe("Flip 7 Game Details", () => {
 
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();
-    await page.waitForURL("/games/flip7/game?id=**");
+    await page.getByRole("heading", { name: "Game details" }).waitFor();
+  });
+
+  test("a11y smoke", async ({ page }) => {
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("display players and their initial scores", async ({ page }) => {
@@ -34,11 +41,11 @@ test.describe("Flip 7 Game Details", () => {
     }
 
     await expect(
-      page.getByRole("button", { name: "Score round" })
+      page.getByRole("button", { name: "Score round" }),
     ).toBeVisible();
 
     await expect(
-      page.getByText("This game has been completed")
+      page.getByText("This game has been completed"),
     ).not.toBeVisible();
   });
 
@@ -51,10 +58,10 @@ test.describe("Flip 7 Game Details", () => {
     await page.getByTestId("player-2-score").fill("150");
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Save Round" }).click();
-    await page.waitForURL("/games/flip7/game?id=**");
+    await page.getByRole("heading", { name: "Game details" }).waitFor();
 
     await expect(
-      page.getByRole("button", { name: "Score round" })
+      page.getByRole("button", { name: "Score round" }),
     ).not.toBeVisible();
 
     await expect(page.getByText("This game has been completed")).toBeVisible();

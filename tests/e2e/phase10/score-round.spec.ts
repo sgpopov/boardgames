@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createPhase10Game } from "./helpers";
+import AxeBuilder from "@axe-core/playwright";
 
 test.describe("Phase 10 Score Round", () => {
   test.beforeEach(async ({ page }) => {
@@ -9,6 +10,12 @@ test.describe("Phase 10 Score Round", () => {
     await expect(
       page.getByRole("heading", { name: "Score round" }),
     ).toBeVisible();
+  });
+
+  test("a11y smoke", async ({ page }) => {
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("scores a single round and returns to game details", async ({
@@ -28,11 +35,12 @@ test.describe("Phase 10 Score Round", () => {
 
     expect(players.length).toBe(3);
 
-    for (const player of players) {
+    for (let index = 0; index < players.length; index += 1) {
+      const player = players[index];
       const score = await player
         .locator('[data-slot="item-actions"]')
         .textContent();
-      expect(score).toEqual(expectedScores.shift());
+      expect(score).toEqual(expectedScores[index]);
     }
   });
 
@@ -61,11 +69,12 @@ test.describe("Phase 10 Score Round", () => {
     const expectedScores = ["15", "25", "45"];
     const players = await page.locator("[data-slot='item']").all();
 
-    for (const player of players) {
+    for (let index = 0; index < players.length; index += 1) {
+      const player = players[index];
       const score = await player
         .locator('[data-slot="item-actions"]')
         .textContent();
-      expect(score).toEqual(expectedScores.shift());
+      expect(score).toEqual(expectedScores[index]);
     }
   });
 
@@ -96,9 +105,7 @@ test.describe("Phase 10 Score Round", () => {
     // Decrease to 1; button should then be disabled
     await page.getByTestId("player-0-decrease-phase").click();
     await expect(player0Phase).toHaveText("1");
-    await expect(
-      page.getByTestId("player-0-decrease-phase"),
-    ).toBeDisabled();
+    await expect(page.getByTestId("player-0-decrease-phase")).toBeDisabled();
   });
 
   test("phase changes persist in game details after saving", async ({

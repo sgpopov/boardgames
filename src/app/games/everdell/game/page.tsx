@@ -1,6 +1,6 @@
 "use client";
 
-import { GameDetails } from "@games/everdell";
+import { GameDetails } from "@games/everdell/ui/components/GameDetails";
 import { useSearchParams } from "next/navigation";
 
 export default function CreateEverdellGamePage() {

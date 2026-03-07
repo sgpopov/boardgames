@@ -1,5 +1,6 @@
 import type { GameRepository } from "@core/domain/repositories/GameRepository";
 import type { Flip7Game } from "@games/flip7/domain/entities/game";
+import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
 
 export async function getGameDetails(
   repo: GameRepository<Flip7Game>,
@@ -8,7 +9,7 @@ export async function getGameDetails(
   const game = await repo.getById(gameId);
 
   if (!game) {
-    throw new Error("Game not found");
+    throw new GameNotFoundError();
   }
 
   return game;

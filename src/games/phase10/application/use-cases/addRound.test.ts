@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { addPhase10Round, AddRoundInput } from "@games/phase10";
+import { addPhase10Round } from "@/games/phase10/application/use-cases/addRound";
+import { AddRoundInput } from "@/games/phase10/domain/validation/rounds.schema";
 import { InMemoryPhase10Repo } from "../../tests/mock-repository";
 import { makeGame, makePlayer } from "../../tests/helpers";
+import { ValidationError } from "@/core/domain/errors/ValidationError";
 
 describe("addPhase10Round use case", () => {
   it("should update a single player score", async () => {
@@ -123,7 +125,7 @@ describe("addPhase10Round use case", () => {
     await expect(
       addPhase10Round(repo, "missing", {
         players: [{ id: "p1", phase: 1, score: 5 }],
-      })
+      }),
     ).rejects.toThrow(/Game not found/);
   });
 
@@ -143,7 +145,7 @@ describe("addPhase10Round use case", () => {
     };
 
     await expect(addPhase10Round(repo, game.id, badInput)).rejects.toThrow(
-      /Invalid round input/
+      ValidationError,
     );
   });
 });

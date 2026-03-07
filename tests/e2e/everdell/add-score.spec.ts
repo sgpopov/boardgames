@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test.describe("Everdell Player Score Management", () => {
@@ -15,9 +16,37 @@ test.describe("Everdell Player Score Management", () => {
     await page.getByRole("button", { name: "Create game" }).click();
   });
 
+  test("a11y smoke - scoring form", async ({ page }) => {
+    await page.getByRole("link", { name: "Edit score for Cards" }).click();
+    await page.getByRole("button", { name: "Save scores" }).waitFor();
+
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
+  });
+
+  test("a11y smoke - results page", async ({ page }) => {
+    await page.getByRole("link", { name: "Edit score for Cards" }).click();
+    await page.getByRole("button", { name: "Save scores" }).waitFor();
+
+    await page.getByTestId("player-0-score").fill("10");
+    await page.getByTestId("player-1-score").fill("25");
+    await page.getByTestId("player-2-score").fill("30");
+    await page.getByRole("button", { name: "Save scores" }).click();
+    await page.waitForSelector("table", { state: "visible" });
+
+    await page.goto(page.url());
+
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
+  });
+
   test("updates player scores and verifies the results", async ({ page }) => {
     // fill in player scores
     await page.getByRole("link", { name: "Edit score for Cards" }).click();
+    await page.getByRole("button", { name: "Save scores" }).waitFor();
+
     await page.getByTestId("player-0-score").fill("10");
     await page.getByTestId("player-1-score").fill("25");
     await page.getByTestId("player-2-score").fill("30");
@@ -32,9 +61,9 @@ test.describe("Everdell Player Score Management", () => {
       .evaluateAll((rows) =>
         rows.map((row) =>
           Array.from(row.querySelectorAll("td")).map((cell) =>
-            cell.textContent?.trim()
-          )
-        )
+            cell.textContent?.trim(),
+          ),
+        ),
       );
 
     expect(playerScores).not.toBeNull();
@@ -79,9 +108,9 @@ test.describe("Everdell Player Score Management", () => {
       .evaluateAll((rows) =>
         rows.map((row) =>
           Array.from(row.querySelectorAll("td")).map((cell) =>
-            cell.textContent?.trim()
-          )
-        )
+            cell.textContent?.trim(),
+          ),
+        ),
       );
 
     expect(playerScores).not.toBeNull();

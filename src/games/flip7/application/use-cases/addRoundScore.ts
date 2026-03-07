@@ -4,31 +4,34 @@ import {
   AddRoundInput,
   validateAddRound,
 } from "../../domain/validation/round-score.schema";
+import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
+import { GameAlreadyCompletedError } from "@core/domain/errors/GameAlreadyCompletedError";
+import { ValidationError } from "@core/domain/errors/ValidationError";
 
 export async function addRoundScore(
   repo: GameRepository<Flip7Game>,
   gameId: string,
-  scores: AddRoundInput
+  scores: AddRoundInput,
+  now: () => string = () => new Date().toISOString()
 ) {
   const validation = validateAddRound(scores);
 
   if (!validation.success) {
-    throw new Error(
-      "Invalid round input: " +
-        validation.error.issues
-          .map((i) => `${i.path.join(".")}: ${i.message}`)
-          .join("; ")
-    );
+    const details = validation.error.issues
+      .map((i) => `${i.path.join(".")}: ${i.message}`)
+      .join("; ");
+
+    throw new ValidationError("Invalid round input", details);
   }
 
   const game = await repo.getById(gameId);
 
   if (!game) {
-    throw new Error("Game not found");
+    throw new GameNotFoundError();
   }
 
   if (game.completedAt) {
-    throw new Error("Game already completed");
+    throw new GameAlreadyCompletedError();
   }
 
   const gameRounds = game.rounds;
@@ -39,7 +42,7 @@ export async function addRoundScore(
       playerId: p.id,
       score: p.score,
     })),
-    savedAt: new Date().toISOString(),
+    savedAt: now(),
   });
 
   const players = game.players.map((player) => {
@@ -61,7 +64,7 @@ export async function addRoundScore(
     ...game,
     rounds: gameRounds,
     players,
-    completedAt: winner ? new Date().toISOString() : null,
+    completedAt: winner ? now() : null,
     winnerId: winner?.id ?? null,
   };
 

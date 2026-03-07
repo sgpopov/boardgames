@@ -1,4 +1,5 @@
-import { EverdellGame, GameModule, ModuleComponent } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { GameModule, ModuleComponent } from "@/games/everdell/application/entities/GameModules";
 
 type ScoreRow = {
   key: string;

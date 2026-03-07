@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import Image from "next/image";
+import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import { TrophyIcon } from "lucide-react";
 import { routes } from "@/app/routes";
@@ -14,7 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { buildScoreRows, useGameDetails } from "@games/everdell";
+import { buildScoreRows } from "@/games/everdell/ui/presenters/buildScoreRows";
+import { useGameDetails } from "@/games/everdell/ui/hooks/useGameDetails";
 
 type GameDetailsProps = {
   gameId: string;
@@ -81,7 +82,7 @@ export function GameDetails(props: GameDetailsProps) {
                         {row.icon && (
                           <Image
                             className="h-6 w-6"
-                            src={row.icon}
+                            src={row.icon as ImageProps["src"]}
                             alt={row.key}
                           />
                         )}

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function GameDetails({ id }: { id: string }) {
-  const { game, gameLoaded } = useGetGameDetails({ id });
+  const { game, gameLoaded, gameError } = useGetGameDetails({ id });
 
   if (!gameLoaded) {
     return (
@@ -29,7 +29,7 @@ export function GameDetails({ id }: { id: string }) {
   if (!game) {
     return (
       <div className="p-5 space-y-6">
-        <p>Game not found</p>
+        <p>{gameError ?? "Game not found"}</p>
       </div>
     );
   }
@@ -44,7 +44,7 @@ export function GameDetails({ id }: { id: string }) {
       )}
 
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Game details</h2>
+        <h1 className="text-xl font-semibold">Game details</h1>
 
         {!game.completedAt && (
           <Link

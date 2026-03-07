@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Phase10Game } from "@games/phase10";
+import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
 import { usePhase10Repo } from "@/games/phase10/ui/hooks/usePhase10Repo";
 
 export function useGameDetails(gameId: string) {
@@ -9,15 +9,15 @@ export function useGameDetails(gameId: string) {
   const [game, setGame] = useState<Phase10Game | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(true);
 
-  const removeGame = (id: string) => {
-    repo.delete(id);
+  const removeGame = async (id: string) => {
+    await repo.delete(id);
   };
 
   const getPhaseDetails = useCallback(
     (phaseNumber: number) => {
       return repo.getPhaseDetails(phaseNumber);
     },
-    [repo]
+    [repo],
   );
 
   useEffect(() => {

@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { buildScoreRows } from "./buildScoreRows";
 
-import type { EverdellGame, EverdellPlayer, GameModule } from "@games/everdell";
+import type { EverdellGame, EverdellPlayer } from "@/games/everdell/application/entities/EverdellGame";
+import type { GameModule } from "@/games/everdell/application/entities/GameModules";
 
 describe("buildScoreRows", () => {
   const players: EverdellPlayer[] = [

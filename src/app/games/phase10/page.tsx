@@ -8,7 +8,7 @@ import {
   Clock3Icon,
   DicesIcon,
 } from "lucide-react";
-import { Phase10Game } from "@games/phase10";
+import { Phase10Game } from "@games/phase10/application/entities/Phase10Game";
 import { usePhase10Repo } from "@games/phase10/ui/hooks/usePhase10Repo";
 import {
   Item,
@@ -17,15 +17,7 @@ import {
   ItemTitle,
   ItemActions,
 } from "@/components/ui/item";
-import { Button } from "@/components/ui/button";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
-} from "@/components/ui/empty";
+import { ListEmptyState } from "@/components/composite/ListEmptyState";
 import { routes } from "@/app/routes";
 
 export default function Phase10Page() {
@@ -48,11 +40,25 @@ export default function Phase10Page() {
     );
   }
 
+  if (!games.length) {
+    return (
+      <ListEmptyState
+        title="No games found"
+        description="You haven't created any games yet. Get started by creating your first game."
+        icon={<DicesIcon />}
+        link={{
+          href: routes.phase10.newGame(),
+          label: "Create new game",
+        }}
+      />
+    );
+  }
+
   return (
     <div className="p-5 space-y-4">
       {games.length > 0 && (
         <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">Games ({games.length})</h2>
+          <h1 className="text-xl font-semibold">Games ({games.length})</h1>
           <Link
             href={routes.phase10.newGame()}
             className="text-sm underline self-center"
@@ -64,13 +70,24 @@ export default function Phase10Page() {
 
       {games.map((game: Phase10Game) => (
         <Item key={game.id} variant="outline" size="sm" asChild>
-          <Link href={routes.phase10.gameDetails(game.id)} className="no-underline">
+          <Link
+            href={routes.phase10.gameDetails(game.id)}
+            className="no-underline"
+          >
             <ItemMedia>
               {!game.completedAt && (
-                <Clock3Icon color="orange" className="size-5" />
+                <Clock3Icon
+                  color="orange"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
               {!!game.completedAt && (
-                <BadgeCheckIcon color="green" className="size-5" />
+                <BadgeCheckIcon
+                  color="green"
+                  className="size-5"
+                  aria-hidden="true"
+                />
               )}
             </ItemMedia>
             <ItemContent>
@@ -85,29 +102,6 @@ export default function Phase10Page() {
           </Link>
         </Item>
       ))}
-
-      {games.length === 0 && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <DicesIcon />
-            </EmptyMedia>
-            <EmptyTitle>No games found</EmptyTitle>
-            <EmptyDescription>
-              You haven&apos;t created any games yet. Get started by creating
-              your first game.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Link
-              href={routes.phase10.newGame()}
-              className="text-sm underline self-center"
-            >
-              <Button>Create new game</Button>
-            </Link>
-          </EmptyContent>
-        </Empty>
-      )}
     </div>
   );
 }

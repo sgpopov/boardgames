@@ -1,4 +1,5 @@
 import { StorageContract } from "./StorageInterface";
+import { StorageWriteError } from "./StorageWriteError";
 
 // SSR-safe local storage helper
 export class LocalStorageWrapper implements StorageContract {
@@ -43,6 +44,10 @@ export class LocalStorageWrapper implements StorageContract {
       return;
     }
 
-    store.setItem(`${this.namespace}:${key}`, JSON.stringify(value));
+    try {
+      store.setItem(`${this.namespace}:${key}`, JSON.stringify(value));
+    } catch (error) {
+      throw new StorageWriteError(`${this.namespace}:${key}`, error);
+    }
   }
 }

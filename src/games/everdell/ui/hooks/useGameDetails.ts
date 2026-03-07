@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { EverdellGame } from "@games/everdell";
+import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 import { useEverdellRepo } from "./useEverdellRepo";
 
 export function useGameDetails(gameId: string) {

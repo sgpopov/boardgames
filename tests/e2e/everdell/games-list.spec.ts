@@ -1,8 +1,19 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test.describe("Everdell - Games list", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/games/everdell");
+  });
+
+  test("a11y smoke - no games", async ({ page }) => {
+    await page.goto("/games/everdell");
+
+    const scanResults = await new AxeBuilder({ page })
+      .disableRules(["color-contrast"])
+      .analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("displays empty state when no games exist", async ({ page }) => {
@@ -30,5 +41,24 @@ test.describe("Everdell - Games list", () => {
     const gameItems = page.locator("[data-slot='item']");
     await expect(gameItems).toHaveCount(1);
     await expect(page.getByText("No games found")).not.toBeVisible();
+  });
+
+  test("a11y smoke - games list", async ({ page }) => {
+    await page.getByRole("link", { name: "Create new game" }).click();
+
+    await page.getByRole("button", { name: "Add Player" }).click();
+    await page.getByLabel("Player 1").fill("James Bond");
+    await page.getByLabel("Player 2").fill("Bruce Wayne");
+    await page.keyboard.press("Tab");
+    await page.getByRole("button", { name: "Create game" }).click();
+    await page.waitForURL(/\/games\/everdell\/game\?id=/);
+
+    await page.goto("/games/everdell");
+
+    const scanResults = await new AxeBuilder({ page })
+      .disableRules(["color-contrast"])
+      .analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 });

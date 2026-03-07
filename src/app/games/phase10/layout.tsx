@@ -22,9 +22,9 @@ export default function Phase10Layout({
           href={routes.phase10.list()}
           className="flex items-center gap-5 no-underline"
         >
-          <Image src={logo} alt="Phase 10" className="h-10 w-auto" />
+          <Image src={logo} alt="Phase 10 logo" className="h-10 w-auto" />
 
-          <h1 className="text-2xl font-semibold">Phase 10</h1>
+          <span className="text-2xl font-semibold">Phase 10</span>
         </Link>
       </header>
       <main>
