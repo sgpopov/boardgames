@@ -17,15 +17,7 @@ import {
   ItemTitle,
   ItemActions,
 } from "@/components/ui/item";
-import { Button } from "@/components/ui/button";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
-} from "@/components/ui/empty";
+import { ListEmptyState } from "@/components/composite/ListEmptyState";
 import { routes } from "@/app/routes";
 
 export default function Phase10Page() {
@@ -48,11 +40,25 @@ export default function Phase10Page() {
     );
   }
 
+  if (!games.length) {
+    return (
+      <ListEmptyState
+        title="No games found"
+        description="You haven't created any games yet. Get started by creating your first game."
+        icon={<DicesIcon />}
+        link={{
+          href: routes.phase10.newGame(),
+          label: "Create new game",
+        }}
+      />
+    );
+  }
+
   return (
     <div className="p-5 space-y-4">
       {games.length > 0 && (
         <div className="flex justify-between">
-          <h2 className="text-xl font-semibold">Games ({games.length})</h2>
+          <h1 className="text-xl font-semibold">Games ({games.length})</h1>
           <Link
             href={routes.phase10.newGame()}
             className="text-sm underline self-center"
@@ -96,29 +102,6 @@ export default function Phase10Page() {
           </Link>
         </Item>
       ))}
-
-      {games.length === 0 && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <DicesIcon />
-            </EmptyMedia>
-            <EmptyTitle>No games found</EmptyTitle>
-            <EmptyDescription>
-              You haven&apos;t created any games yet. Get started by creating
-              your first game.
-            </EmptyDescription>
-          </EmptyHeader>
-          <EmptyContent>
-            <Link
-              href={routes.phase10.newGame()}
-              className="text-sm underline self-center"
-            >
-              <Button>Create new game</Button>
-            </Link>
-          </EmptyContent>
-        </Empty>
-      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { createPhase10Game } from "./helpers";
+import AxeBuilder from "@axe-core/playwright";
 
 test.describe("Phase 10 Score Round", () => {
   test.beforeEach(async ({ page }) => {
@@ -9,6 +10,12 @@ test.describe("Phase 10 Score Round", () => {
     await expect(
       page.getByRole("heading", { name: "Score round" }),
     ).toBeVisible();
+  });
+
+  test("a11y smoke", async ({ page }) => {
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("scores a single round and returns to game details", async ({

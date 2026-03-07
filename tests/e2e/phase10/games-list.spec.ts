@@ -1,8 +1,17 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test.describe("Phase 10 - Games list", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/games/phase10");
+  });
+
+  test("a11y smoke - no games", async ({ page }) => {
+    await page.goto("/games/phase10");
+
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("displays empty state when no games exist", async ({ page }) => {
@@ -38,5 +47,9 @@ test.describe("Phase 10 - Games list", () => {
     await expect(
       page.getByRole("link", { name: "Create new game" }),
     ).toBeVisible();
+
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 });
