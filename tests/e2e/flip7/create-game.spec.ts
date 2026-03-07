@@ -1,4 +1,15 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
+
+test("a11y smoke - no games", async ({ page }) => {
+  await page.goto("/games/flip7");
+
+  const scanResults = await new AxeBuilder({ page })
+    .disableRules(["color-contrast"])
+    .analyze();
+
+  expect(scanResults.violations).toEqual([]);
+});
 
 test("creates Flip7 game", async ({ page }) => {
   await page.goto("/games/flip7");
@@ -22,7 +33,7 @@ test("creates Flip7 game", async ({ page }) => {
   await expect(page).toHaveURL(/\/games\/flip7\/game\?id=/);
 
   await expect(
-    page.getByRole("heading", { name: "Game details" })
+    page.getByRole("heading", { name: "Game details" }),
   ).toBeVisible();
 
   // Players should appear
@@ -46,4 +57,8 @@ test("creates Flip7 game", async ({ page }) => {
 
     expect(playerScore, "player score").toContain("0");
   }
+
+  const scanResults = await new AxeBuilder({ page }).analyze();
+
+  expect(scanResults.violations).toEqual([]);
 });

@@ -44,7 +44,7 @@ export function GameDetails({ id }: { id: string }) {
       )}
 
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Game details</h2>
+        <h1 className="text-xl font-semibold">Game details</h1>
 
         {!game.completedAt && (
           <Link

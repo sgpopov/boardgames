@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test.describe("Flip 7 Score Management", () => {
@@ -10,7 +11,18 @@ test.describe("Flip 7 Score Management", () => {
 
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();
-    await page.waitForURL("/games/flip7/game?id=**");
+    await page.getByRole("heading", { name: "Game details" }).waitFor();
+  });
+
+  test("a11y smoke", async ({ page }) => {
+    await page.getByRole("button", { name: "Score round" }).click();
+    await page.waitForSelector("form", { state: "visible" });
+
+    const scanResults = await new AxeBuilder({ page })
+      .disableRules(["page-has-heading-one"])
+      .analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("updates player scores and verifies the results", async ({ page }) => {

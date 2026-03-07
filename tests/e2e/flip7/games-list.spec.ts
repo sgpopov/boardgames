@@ -1,8 +1,15 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 test.describe("Flip 7 - Games list", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/games/flip7");
+  });
+
+  test("a11y smoke", async ({ page }) => {
+    const scanResults = await new AxeBuilder({ page }).analyze();
+
+    expect(scanResults.violations).toEqual([]);
   });
 
   test("displays empty list of games", async ({ page }) => {

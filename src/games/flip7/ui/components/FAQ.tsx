@@ -28,7 +28,7 @@ export function FAQ() {
   return (
     <>
       <div className="flex justify-between">
-        <h2 className="text-xl font-semibold">FAQ</h2>
+        <h1 className="text-xl font-semibold">FAQ</h1>
       </div>
 
       <InputGroup className="px-0">
@@ -45,7 +45,9 @@ export function FAQ() {
         {items.map((item, idx) => {
           return (
             <AccordionItem key={`question${idx}`} value={`question${idx}`}>
-              <AccordionTrigger>{item.question}</AccordionTrigger>
+              <AccordionTrigger headingLevel={2}>
+                {item.question}
+              </AccordionTrigger>
               <AccordionContent>{item.answer}</AccordionContent>
             </AccordionItem>
           );
