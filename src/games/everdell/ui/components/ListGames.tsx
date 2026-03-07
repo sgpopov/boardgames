@@ -30,8 +30,20 @@ export function ListEverdellGames() {
     );
   }
 
+  if (!games.length) {
+    return (
+      <ListEmptyState
+        title="No games found"
+        description="You haven't created any games yet. Get started by creating your first game."
+        icon={<DicesIcon />}
+      />
+    );
+  }
+
   return (
     <div className="space-y-4">
+      <h1 className="text-xl font-semibold">Games ({games.length})</h1>
+
       {games.map((game: EverdellGame) => (
         <Item key={game.id} variant="outline" size="sm" asChild>
           <Link
@@ -66,15 +78,6 @@ export function ListEverdellGames() {
           </Link>
         </Item>
       ))}
-
-      {games.length === 0 && (
-        <ListEmptyState
-          title="No games found"
-          description="You haven't created any games yet. Get started by creating
-              your first game."
-          icon={<DicesIcon />}
-        />
-      )}
     </div>
   );
 }
