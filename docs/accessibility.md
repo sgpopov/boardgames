@@ -1,6 +1,6 @@
 # Accessibility Guidelines (Client-Only Next.js App)
 
-These project rules align with: Next.js Accessibility Architecture Guide, WCAG 2.2 (AA), WebAIM WCAG Checklist, and the A11Y Project best practices. They are tailored for our client-only Next.js + React + shadcn UI + Radix primitives + Tailwind stack.
+These project rules align with: Next.js Accessibility Architecture Guide, WCAG 2.2 (AA), WebAIM WCAG Checklist, and the A11Y Project best practices.
 
 ---
 ## 1. Core Principles
@@ -107,7 +107,7 @@ test('home page a11y', async ({ page }) => {
 
 ---
 ## 13. Accessibility Review Checklist (PR)
-Reviewer (and Copilot) must verify:
+Verify that:
 1. Semantic landmarks present (`<main>` single, skip link included if page-level change).
 2. All interactive elements use native elements or Radix primitives (no `div` buttons).
 3. Focus order logical; newly added dialogs restore focus on close.
@@ -127,19 +127,7 @@ Reviewer (and Copilot) must verify:
 Reject or request changes if any of 1–8 fail, or if repeated issues appear.
 
 ---
-## 14. Copilot Generation Rules (UI Code)
-When generating components Copilot should:
-- Insert proper semantic element first (not a styled `div`).
-- Add accessible name for icon-only controls.
-- Include `aria-describedby` linking error text for forms.
-- Provide Tailwind focus ring classes on interactive elements.
-- Avoid hard-coding hex colors; use design tokens ensuring contrast.
-- Suggest skip link if creating a new top-level layout.
-- Use Radix AlertDialog/Dialog/Menu primitives for overlays instead of custom roles.
-- Provide motion media queries when adding animation classes.
-
----
-## 15. Anti-Patterns (Reject)
+## 14. Anti-Patterns (Reject)
 - `onClick` on `<div>` or `<span>` used as a button without role/keyboard support.
 - Removing outline with no replacement (`outline-none` alone).
 - Using `aria-live="assertive"` for non-urgent updates (turn changes, routine saves).
@@ -149,22 +137,11 @@ When generating components Copilot should:
 - Using color-only badge to indicate status (e.g., red circle for error) lacking text.
 
 ---
-## 16. Documentation & Maintenance
+## 15. Documentation & Maintenance
 - Each new complex interactive widget (e.g., board navigation) must include a short comment or README snippet explaining keyboard interactions.
 - Re-run accessibility checks before releases (add a release script target).
 
 Release script idea:
 ```bash
-pnpm playwright test --grep @a11y
+npx playwright test --grep @a11y
 ```
-
----
-## 17. Future Enhancements
-- Add automatic contrast checking in CI for custom Tailwind tokens.
-- Provide localized alt/aria-label text for future i18n.
-- Integrate screenshot diff for focus states to ensure consistency.
-
----
-## 18. Summary
-These rules ensure our games remain usable for keyboard-only, screen reader, low-vision, motion-sensitive, and cognitive diversity users. Copilot must enforce semantic correctness, focus management, contrast, and ARIA restraint in generated suggestions and reviews.
-

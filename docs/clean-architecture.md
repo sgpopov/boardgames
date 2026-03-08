@@ -1,4 +1,4 @@
-# GitHub Copilot Clean Architecture & Review Guidelines
+# Clean Architecture & Review Guidelines
 
 This repository adapts Uncle Bob's Clean Architecture principles to a modular, multi–game setting with local storage as the data source and the following stack:
 
@@ -44,10 +44,6 @@ src/games/<gameName>/
 		components/      # Presentational components using shadcn/Radix/Tailwind
 		hooks/           # React hooks (wrap application layer)
 		forms/           # @tanstack/react-form configurations
-	tests/
-		unit/            # Vitest: domain + application
-		integration/     # Infrastructure adapter tests (with mocked localStorage if needed)
-		fixtures/        # Reusable test data builders
 ```
 
 No barrel (`index.ts`) re-exports. Import directly from specific files to avoid hidden coupling.
@@ -90,8 +86,8 @@ No barrel (`index.ts`) re-exports. Import directly from specific files to avoid 
 - Avoid boolean parameter ambiguity; use object params with named fields.
 
 ---
-## 5. Code Generation Guidelines (Copilot Prompts)
-When generating new code Copilot should:
+## 5. Code Generation Guidelines
+When generating new code:
 1. Start at the domain: define entities, validation schemas (Zod), and repository interfaces.
 2. Create use case(s) in `application/use-cases` that accept repositories & simple value objects.
 3. Implement infrastructure adapters referencing repository interfaces; isolate raw persistence (localStorage) in one place.
@@ -130,7 +126,7 @@ Coverage expectations: Critical domain invariants & all use cases must have test
 - Do not use server-only helpers (`cookies()`, `headers()`, Route Handlers) or expect server data hydration.
 
 ---
-## 8. Code Generation Checklist (Copilot)
+## 8. Code Generation Checklist
 - Domain entities & Zod schemas defined.
 - Repository interface(s) declared.
 - Use case(s) implemented with clear input/output types.
@@ -144,7 +140,7 @@ Coverage expectations: Critical domain invariants & all use cases must have test
 
 ---
 ## 9. Code Review Checklist
-Reviewers (and Copilot) must verify:
+Must verify that:
 1. **Layer Boundaries:** UI does not import infrastructure; application does not import UI; domain imports nothing outward.
 2. **Purity:** Domain & application functions have no hidden side effects (time, storage, random) without abstraction.
 3. **Validation:** Inputs checked via Zod before creating/modifying entities.
@@ -284,23 +280,8 @@ Checklist:
 ```
 
 ---
-## 17. Copilot Code Review Heuristics (Automated Suggestions)
-When suggesting improvements in a PR, Copilot should:
-- Flag any file where `localStorage` appears outside infrastructure.
-- Flag React imports inside `domain/` or `application/`.
-- Suggest splitting large (>150 LOC) use case files.
-- Recommend adding unit tests for any new repository interface or use case without coverage.
-- Suggest replacing boolean flags with parameter objects if >2 booleans.
-- Point out missing error type definitions if `throw new Error("...")` is used in domain code.
-
----
-## 18. Evolution Strategy
+## 17. Evolution Strategy
 As new games are added:
 - Reuse shared abstractions in `src/core/` (e.g., generic GameState typing) without coupling modules.
 - Introduce cross-module services only after 3+ modules need the same orchestration; otherwise keep logic localized.
 - Maintain backward compatibility in storage by version tagging.
-
----
-## 19. Summary
-This document ensures consistent, clean, testable, and modular code generation & review. Copilot must honor layer boundaries, prioritize purity and explicit types, and enforce the checklist before suggesting merges.
-
