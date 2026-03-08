@@ -10,6 +10,6 @@ description: Comprehensive web application testing using Playwright. Tests acces
 ## Playwright Skills
 
 Before starting, read the following reference docs:
-- `docs/e2e-testing.md` — system architecture overview
+- `docs/e2e-testing.md` — end-to-end testing workflow and standards guide
 
 Then apply what you've learned to the task.
