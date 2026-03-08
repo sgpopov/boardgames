@@ -114,8 +114,8 @@ export const metadata = {
 - Avoid embedding language-specific content in structured data without specifying `inLanguage` when multi-lingual.
 
 ---
-## 12. Copilot Code Generation Rules (SEO)
-When generating page or component code Copilot should:
+## 12. Code Generation Rules (SEO)
+When generating page or component code one should:
 1. Add `metadata` export with title & description under 60/160 char limits respectively.
 2. Include at least one descriptive H1 and supporting paragraphs in page root.
 3. Provide internal links to related game pages using semantic anchor text.
@@ -128,7 +128,7 @@ When generating page or component code Copilot should:
 
 ---
 ## 13. Code Review Checklist (SEO)
-Reviewer (and Copilot) must verify:
+Must verify that:
 1. Metadata present (title, description, OG/Twitter, canonical).
 2. Title & description lengths appropriate (no truncation risk, no keyword stuffing).
 3. Single H1 present; logical heading hierarchy thereafter.
@@ -206,8 +206,3 @@ export default function Phase10Page() {
 - Add localized metadata once i18n arrives (`generateMetadata` based on locale param).
 - Consider `game` category schema enhancements with `aggregateRating` only when user reviews feature exists.
 - Potential static export for guaranteed HTML presence.
-
----
-## 19. Summary
-These SEO rules ensure each game module is indexable, descriptive, performant, and accessible. Copilot must embed metadata, semantic content, internal links, structured data, and avoid client-only hidden critical information. Review checklist enforces consistency and prevents regressions.
-

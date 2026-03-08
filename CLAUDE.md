@@ -11,12 +11,12 @@
 - Testing: Vitest (unit/integration), Playwright (e2e).
 
 ### Core Conventions (strict checklist)
-- Respect layer boundaries: UI → application → domain; infrastructure depends inward. Domain/application remain framework-free. See [.github/instructions/clean-architecture.instructions.md](.github/instructions/clean-architecture.instructions.md).
+- Respect layer boundaries: UI → application → domain; infrastructure depends inward. Domain/application remain framework-free. See [docs/clean-architecture.md](docs/clean-architecture.md).
 - No barrels (`index.ts`) re-exports; import concrete files.
 - UI never touches `localStorage`; only repositories/adapters in infrastructure do. Inject dependencies for IDs/time/storage to keep tests deterministic.
 - Pages/components are client components; avoid SSR features (`cookies()`, `headers()`, route handlers, server fetch). Add `'use client'` when needed.
-- Accessibility: semantic landmarks, focus management, labels/errors, contrast, live regions for game state. Follow [.github/instructions/accessibility.instructions.md](.github/instructions/accessibility.instructions.md).
-- SEO: metadata per page, single H1, structured copy, JSON-LD for game pages, internal links, stable canonical. Follow [.github/instructions/seo.instructions.md](.github/instructions/seo.instructions.md).
+- Accessibility: semantic landmarks, focus management, labels/errors, contrast, live regions for game state. Follow [docs/accessibility.md](docs/accessibility.md).
+- SEO: metadata per page, single H1, structured copy, JSON-LD for game pages, internal links, stable canonical. Follow [docs/seo.md](docs/seo.md).
 - shadcn UI: add components via the registry/CLI flow (see https://ui.shadcn.com/docs/mcp) using the configured entries in [components.json](components.json); prefer composition over heavy customization and keep Radix primitives intact.
 
 ### How to Validate Changes (run locally)
@@ -35,3 +35,6 @@
 ### PR Expectations
 - New features: include tests at relevant layers, wire metadata/a11y for new pages, and update registry/routes if adding a game.
 - Reject/redo if any checklist item above is violated.
+
+### Additional resources
+- [README.md](README.md)
