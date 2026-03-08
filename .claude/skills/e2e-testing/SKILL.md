@@ -1,6 +1,6 @@
 ---
 name: e2e-testing
-description: Comprehensive web application testing using Playwright. Tests accessibility (WCAG 2.1 AA), UX principles and functional correctness
+description: Comprehensive web application testing using Playwright. Tests accessibility (WCAG 2.2 AA), UX principles and functional correctness
 ---
 
 ## When to Use
