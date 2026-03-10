@@ -83,7 +83,7 @@ test.describe("Everdell Game Details", () => {
     // score edit links should no longer exist
     await expect(
       page.getByRole("link", { name: "Edit score for Cards" }),
-    ).not.toBeVisible();
+    ).toHaveCount(0);
   });
 
   test("navigating to the score form of a completed game shows a block message", async ({
@@ -141,6 +141,6 @@ test.describe("Everdell Game Details", () => {
     await expect(page.getByText("Bob wins!")).toBeVisible();
 
     // winner sr-only text should be present in the DOM for the winner's cell
-    await expect(page.getByText("Winner")).toBeVisible();
+    await expect(page.getByText("Winner")).toHaveCount(1)
   });
 });

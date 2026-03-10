@@ -79,7 +79,7 @@ export function GameDetails(props: GameDetailsProps) {
     <div className="lg:mt-5 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {game.completedAt && (
         <Alert variant="success" className="mt-4">
-          <CheckCircle2Icon />
+          <CheckCircle2Icon aria-hidden="true" />
           <AlertDescription>
             This game has been completed
             {winnerNames ? ` - ${winnerNames} wins!` : ""}
@@ -104,7 +104,7 @@ export function GameDetails(props: GameDetailsProps) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" aria-label="Game actions">
-                  <MoreVerticalIcon className="size-4" />
+                  <MoreVerticalIcon className="size-4" aria-hidden="true" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
