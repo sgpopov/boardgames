@@ -1,6 +1,7 @@
 import { GameRepository } from "@core/domain/repositories/GameRepository";
-import { EverdellGame, EverdellPlayer } from "@/games/everdell/application/entities/EverdellGame";
+import { GameAlreadyCompletedError } from "@core/domain/errors/GameAlreadyCompletedError";
 import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
+import { EverdellGame, EverdellPlayer } from "@/games/everdell/application/entities/EverdellGame";
 
 type AddScoreProps = {
   repository: GameRepository<EverdellGame>;
@@ -21,6 +22,10 @@ export async function addScore({
 
   if (!game) {
     throw new GameNotFoundError();
+  }
+
+  if (game.completedAt) {
+    throw new GameAlreadyCompletedError();
   }
 
   const players = game.players.map((player) => {
