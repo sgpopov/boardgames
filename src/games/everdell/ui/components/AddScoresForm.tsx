@@ -3,6 +3,7 @@
 import Image, { type ImageProps } from "next/image";
 import Link from "next/link";
 import { routes } from "@/app/routes";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,7 +30,7 @@ export function AddScoresForm({
   moduleComponent,
   onScoreAdded,
 }: Props) {
-  const { form, players, selectedModuleComponent } = useAddScore({
+  const { form, game, players, selectedModuleComponent } = useAddScore({
     gameId,
     gameModule,
     moduleComponent,
@@ -38,6 +39,21 @@ export function AddScoresForm({
 
   if (!selectedModuleComponent) {
     return <div className="p-5">Unable to find game component</div>;
+  }
+
+  if (game?.completedAt) {
+    return (
+      <div className="space-y-4 p-5">
+        <Alert variant="destructive">
+          <AlertDescription>
+            This game is already completed. Scores can no longer be edited.
+          </AlertDescription>
+        </Alert>
+        <Link href={routes.everdell.gameDetails(gameId)} className="underline text-sm">
+          Go back
+        </Link>
+      </div>
+    );
   }
 
   return (

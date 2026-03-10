@@ -23,6 +23,7 @@ export function useGameDetails(gameId: string) {
 
   return {
     game,
+    setGame,
     isFetching,
     modules,
   };

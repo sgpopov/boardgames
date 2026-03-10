@@ -1,15 +1,17 @@
 import { describe, it, expect } from "vitest";
 import { addScore } from "@/games/everdell/application/use-cases/addScore";
+import { completeGame } from "@/games/everdell/application/use-cases/completeGame";
 import { createEverdellGame } from "@/games/everdell/application/use-cases/createGame";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 import { InMemoryEverdellRepo } from "@games/everdell/tests/mock-repository";
+import { GameAlreadyCompletedError } from "@core/domain/errors/GameAlreadyCompletedError";
 
 function buildGameWithPlayers(names: string[]): Promise<EverdellGame> {
   const repo = new InMemoryEverdellRepo(null);
 
   return createEverdellGame(
     repo,
-    names.map((n) => ({ name: n }))
+    names.map((n) => ({ name: n })),
   );
 }
 
@@ -24,8 +26,25 @@ describe("addScore", () => {
         module: "base",
         component: "cards",
         scores: [],
-      })
+      }),
     ).rejects.toThrowError("Game not found");
+  });
+
+  it("should throw GameAlreadyCompletedError when game is completed", async () => {
+    const game = await buildGameWithPlayers(["Alice", "Bob"]);
+    const repo = new InMemoryEverdellRepo(game);
+
+    await completeGame({ repository: repo, gameId: game.id });
+
+    await expect(
+      addScore({
+        repository: repo,
+        gameId: game.id,
+        module: "base",
+        component: "cards",
+        scores: [{ playerId: game.players[0].id, score: 10 }],
+      }),
+    ).rejects.toThrow(GameAlreadyCompletedError);
   });
 
   it("should update the scores for provided players and persists the game", async () => {
@@ -51,19 +70,19 @@ describe("addScore", () => {
     ]);
 
     expect(updated!.players.every((p) => p.scores.base.prosperity === 0)).toBe(
-      true
+      true,
     );
 
     expect(updated!.players.every((p) => p.scores.base.events === 0)).toBe(
-      true
+      true,
     );
 
     expect(updated!.players.every((p) => p.scores.base.journey === 0)).toBe(
-      true
+      true,
     );
 
     expect(updated!.players.every((p) => p.scores.base.tokens === 0)).toBe(
-      true
+      true,
     );
 
     expect(updated!.players.map((p) => p.total)).toEqual([5, 10, 15]);
@@ -129,13 +148,13 @@ describe("addScore", () => {
     expect(updated!.players.map((p) => p.total)).toEqual([5, 10]);
 
     expect(updated!.players.every((p) => p.scores.base.events === 0)).toBe(
-      true
+      true,
     );
     expect(updated!.players.every((p) => p.scores.base.journey === 0)).toBe(
-      true
+      true,
     );
     expect(updated!.players.every((p) => p.scores.base.tokens === 0)).toBe(
-      true
+      true,
     );
   });
 
