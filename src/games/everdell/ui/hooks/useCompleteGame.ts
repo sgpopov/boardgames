@@ -4,6 +4,7 @@ import { useState } from "react";
 import { completeGame } from "@/games/everdell/application/use-cases/completeGame";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 import { useEverdellRepo } from "@/games/everdell/ui/hooks/useEverdellRepo";
+import { mapErrorToMessage } from "@/core/ui/errors/mapErrorToMessage";
 
 type UseCompleteGameProps = {
   gameId: string;
@@ -24,7 +25,7 @@ export function useCompleteGame({ gameId, onCompleted }: UseCompleteGameProps) {
       const updated = await completeGame({ repository: repo, gameId });
       onCompleted?.(updated);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to complete game");
+      setError(mapErrorToMessage(err, "Failed to complete game"));
     } finally {
       setIsCompleting(false);
     }
