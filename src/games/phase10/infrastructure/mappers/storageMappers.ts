@@ -1,13 +1,13 @@
 import { z } from "zod";
 import {
-  PHASE_MAX,
   PHASE_MIN,
+  WINNER_PHASE,
   SCORE_MIN,
 } from "@/games/phase10/domain/constants";
 import { Phase10Game } from "@/games/phase10/application/entities/Phase10Game";
 
 const StoredRoundSchema = z.object({
-  phase: z.number().int().min(PHASE_MIN).max(PHASE_MAX),
+  phase: z.number().int().min(PHASE_MIN).max(WINNER_PHASE),
   score: z.number().int().min(SCORE_MIN),
   phaseCompleted: z.boolean(),
 });
@@ -16,7 +16,7 @@ const StoredPlayerSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   score: z.number().int().min(SCORE_MIN),
-  phase: z.number().int().min(PHASE_MIN).max(PHASE_MAX),
+  phase: z.number().int().min(PHASE_MIN).max(WINNER_PHASE),
   rounds: z.array(StoredRoundSchema),
 });
 

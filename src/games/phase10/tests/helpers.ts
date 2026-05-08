@@ -22,17 +22,19 @@ export const makeGame = ({
   id,
   players,
   startedAt,
+  completedAt,
   rounds,
 }: {
   id?: string;
   startedAt?: string;
+  completedAt?: string | null;
   players?: Array<ReturnType<typeof makePlayer>>;
   rounds?: number;
 } = {}) => {
   return {
     id: id ?? "game1",
     startedAt: startedAt ?? new Date().toISOString(),
-    completedAt: null,
+    completedAt: completedAt ?? null,
     players: players ?? [makePlayer()],
     rounds: rounds ?? 0,
   };

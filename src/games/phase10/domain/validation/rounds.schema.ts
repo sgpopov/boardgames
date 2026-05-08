@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PHASE_MIN, PHASE_MAX, SCORE_MIN, SCORE_STEP } from "../constants";
+import { PHASE_MIN, WINNER_PHASE, SCORE_MIN, SCORE_STEP } from "../constants";
 
 export const AddRoundPlayerSchema = z.object({
   id: z.string(),
@@ -7,7 +7,7 @@ export const AddRoundPlayerSchema = z.object({
     .number()
     .int()
     .min(PHASE_MIN, `Phase must be >= ${PHASE_MIN}`)
-    .max(PHASE_MAX, `Phase must be <= ${PHASE_MAX}`),
+    .max(WINNER_PHASE, `Phase must be <= ${WINNER_PHASE}`),
   score: z
     .number()
     .int()
