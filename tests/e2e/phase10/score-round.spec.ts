@@ -93,16 +93,14 @@ test.describe("Phase 10 Score Round", () => {
   test("phase increment and decrement controls work", async ({ page }) => {
     const player0Phase = page.getByTestId("player-0-phase");
 
-    // Increase player 0 to phase 3
+    // Increase player 0 by one phase (max advancement per round is +1)
     await page.getByTestId("player-0-increase-phase").click();
-    await page.getByTestId("player-0-increase-phase").click();
-    await expect(player0Phase).toHaveText("3");
-
-    // Decrease back to 2
-    await page.getByTestId("player-0-decrease-phase").click();
     await expect(player0Phase).toHaveText("2");
 
-    // Decrease to 1; button should then be disabled
+    // + button should now be disabled — already at max advancement for this round
+    await expect(page.getByTestId("player-0-increase-phase")).toBeDisabled();
+
+    // Decrease back to 1; button should then be disabled
     await page.getByTestId("player-0-decrease-phase").click();
     await expect(player0Phase).toHaveText("1");
     await expect(page.getByTestId("player-0-decrease-phase")).toBeDisabled();
@@ -111,8 +109,7 @@ test.describe("Phase 10 Score Round", () => {
   test("phase changes persist in game details after saving", async ({
     page,
   }) => {
-    // Increase player 0 to phase 3
-    await page.getByTestId("player-0-increase-phase").click();
+    // Increase player 0 by one phase (advancement is capped at +1 per round)
     await page.getByTestId("player-0-increase-phase").click();
 
     await page.getByTestId("player-0-score").fill("10");
@@ -128,7 +125,7 @@ test.describe("Phase 10 Score Round", () => {
       .locator('[data-slot="item-description"]')
       .textContent();
 
-    expect(description).toContain("Phase 3");
-    expect(description).toContain("1 set of 4 and 1 run of 4");
+    expect(description).toContain("Phase 2");
+    expect(description).toContain("1 set of 3 and 1 run of 4");
   });
 });

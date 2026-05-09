@@ -127,11 +127,12 @@ describe("Phase10GameRepository", () => {
   it("getPhaseDetails returns descriptive name for valid phase", () => {
     expect(repo.getPhaseDetails(1)).toMatch(/2 sets of 3/);
     expect(repo.getPhaseDetails(10)).toMatch(/1 set of 5 and 1 set of 3/);
+    expect(repo.getPhaseDetails(11)).toBe("Completed phase 10");
   });
 
   it("getPhaseDetails returns fallback for invalid phase", () => {
     expect(repo.getPhaseDetails(0)).toBe("Invalid phase number");
-    expect(repo.getPhaseDetails(11)).toBe("Invalid phase number");
+    expect(repo.getPhaseDetails(12)).toBe("Invalid phase number");
   });
 
   it("filters out invalid records when reading from storage", async () => {

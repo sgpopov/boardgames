@@ -4,6 +4,8 @@ import { AddRoundInput } from "@/games/phase10/domain/validation/rounds.schema";
 import { InMemoryPhase10Repo } from "../../tests/mock-repository";
 import { makeGame, makePlayer } from "../../tests/helpers";
 import { ValidationError } from "@/core/domain/errors/ValidationError";
+import { GameAlreadyCompletedError } from "@/core/domain/errors/GameAlreadyCompletedError";
+import { WINNER_PHASE } from "@/games/phase10/domain/constants";
 
 describe("addPhase10Round use case", () => {
   it("should update a single player score", async () => {
@@ -129,7 +131,7 @@ describe("addPhase10Round use case", () => {
     ).rejects.toThrow(/Game not found/);
   });
 
-  it("should throw and error for invalid round input", async () => {
+  it("should throw a validation error for phase beyond winner sentinel", async () => {
     const player = makePlayer();
     const game = makeGame({ players: [player] });
     const repo = new InMemoryPhase10Repo(game);
@@ -138,7 +140,7 @@ describe("addPhase10Round use case", () => {
       players: [
         {
           id: player.id,
-          phase: 11, // phase > max
+          phase: 12,
           score: 10,
         },
       ],
@@ -147,5 +149,98 @@ describe("addPhase10Round use case", () => {
     await expect(addPhase10Round(repo, game.id, badInput)).rejects.toThrow(
       ValidationError,
     );
+  });
+
+  it("should reject scoring on a completed game", async () => {
+    const player = makePlayer({ id: "p1" });
+    const game = makeGame({
+      players: [player],
+      completedAt: new Date().toISOString(),
+    });
+    const repo = new InMemoryPhase10Repo(game);
+
+    await expect(
+      addPhase10Round(repo, game.id, {
+        players: [{ id: player.id, phase: 1, score: 5 }],
+      }),
+    ).rejects.toThrow(GameAlreadyCompletedError);
+  });
+
+  it("should complete the game when a player reaches winner phase", async () => {
+    const fixedNow = "2026-01-01T12:00:00.000Z";
+    const player = makePlayer({ id: "p1", phase: 10 });
+    const game = makeGame({ players: [player] });
+    const repo = new InMemoryPhase10Repo(game);
+
+    const updated = await addPhase10Round(
+      repo,
+      game.id,
+      { players: [{ id: player.id, phase: WINNER_PHASE, score: 20 }] },
+      { now: () => fixedNow },
+    );
+
+    expect(updated.completedAt).toBe(fixedNow);
+    expect(updated.players[0].phase).toBe(WINNER_PHASE);
+    expect(updated.players[0].score).toBe(20);
+  });
+
+  it("should still record score for the winner in the completion round", async () => {
+    const player = makePlayer({ id: "p1", phase: 10 });
+    const game = makeGame({ players: [player] });
+    const repo = new InMemoryPhase10Repo(game);
+
+    const updated = await addPhase10Round(repo, game.id, {
+      players: [{ id: player.id, phase: WINNER_PHASE, score: 35 }],
+    });
+
+    const p = updated.players[0];
+    expect(p.score).toBe(35);
+    expect(p.rounds).toHaveLength(1);
+    expect(p.rounds[0]).toMatchObject({
+      phase: WINNER_PHASE,
+      score: 35,
+      phaseCompleted: true,
+    });
+  });
+
+  it("should not overwrite completedAt on subsequent save attempts", async () => {
+    const player = makePlayer({ id: "p1", phase: 10 });
+    const game = makeGame({ players: [player] });
+    const repo = new InMemoryPhase10Repo(game);
+
+    await addPhase10Round(repo, game.id, {
+      players: [{ id: player.id, phase: WINNER_PHASE, score: 10 }],
+    });
+
+    // Second attempt must fail — game is already completed
+    await expect(
+      addPhase10Round(repo, game.id, {
+        players: [{ id: player.id, phase: WINNER_PHASE, score: 5 }],
+      }),
+    ).rejects.toThrow(GameAlreadyCompletedError);
+  });
+
+  it("should reject phase advancement of more than one step per round", async () => {
+    const player = makePlayer({ id: "p1", phase: 3 });
+    const game = makeGame({ players: [player] });
+    const repo = new InMemoryPhase10Repo(game);
+
+    await expect(
+      addPhase10Round(repo, game.id, {
+        players: [{ id: player.id, phase: 5, score: 10 }],
+      }),
+    ).rejects.toThrow(ValidationError);
+  });
+
+  it("should allow phase to stay the same (no advancement)", async () => {
+    const player = makePlayer({ id: "p1", phase: 5 });
+    const game = makeGame({ players: [player] });
+    const repo = new InMemoryPhase10Repo(game);
+
+    const updated = await addPhase10Round(repo, game.id, {
+      players: [{ id: player.id, phase: 5, score: 10 }],
+    });
+
+    expect(updated.players[0].phase).toBe(5);
   });
 });

@@ -1,13 +1,14 @@
 import { describe, it, expect } from "vitest";
 import { AddRoundSchema } from "./rounds.schema";
-import { PHASE_MIN, PHASE_MAX, SCORE_STEP } from "../constants";
+import { PHASE_MIN, PHASE_MAX, WINNER_PHASE, SCORE_STEP } from "../constants";
 
 describe("AddRoundSchema", () => {
-  it("accepts valid player scores", () => {
+  it("accepts valid player scores including winner phase", () => {
     const result = AddRoundSchema.safeParse({
       players: [
         { id: "p1", phase: PHASE_MIN, score: 0 },
         { id: "p2", phase: PHASE_MAX, score: SCORE_STEP * 2 },
+        { id: "p3", phase: WINNER_PHASE, score: 0 },
       ],
     });
 
@@ -23,9 +24,9 @@ describe("AddRoundSchema", () => {
   });
 
   it.each`
-    phase            | expectedValidationRules
-    ${PHASE_MIN - 1} | ${"too_small"}
-    ${PHASE_MAX + 1} | ${"too_big"}
+    phase                 | expectedValidationRules
+    ${PHASE_MIN - 1}      | ${"too_small"}
+    ${WINNER_PHASE + 1}   | ${"too_big"}
   `("should validate phase - $phase", ({ phase, expectedValidationRules }) => {
     const result = AddRoundSchema.safeParse({
       players: [{ id: "p1", phase: phase, score: 0 }],

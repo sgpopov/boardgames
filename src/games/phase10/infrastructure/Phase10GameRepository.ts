@@ -6,6 +6,7 @@ import {
   fromStorage,
   toStorage,
 } from "@/games/phase10/infrastructure/mappers/storageMappers";
+import { WINNER_PHASE } from "@/games/phase10/domain/constants";
 
 const STORAGE_KEY = "phase10:games";
 
@@ -78,21 +79,20 @@ export class Phase10GameRepository implements GameRepository<Phase10Game> {
   }
 
   getPhaseDetails(phaseNumber: number): string {
-    const phases = [
-      { phase: 1, name: "2 sets of 3" },
-      { phase: 2, name: "1 set of 3 and 1 run of 4" },
-      { phase: 3, name: "1 set of 4 and 1 run of 4" },
-      { phase: 4, name: "1 run of 7" },
-      { phase: 5, name: "1 run of 8" },
-      { phase: 6, name: "1 run of 9" },
-      { phase: 7, name: "2 sets of 4" },
-      { phase: 8, name: "7 cards of a color" },
-      { phase: 9, name: "1 set of 5 and 1 set of 2" },
-      { phase: 10, name: "1 set of 5 and 1 set of 3" },
-    ];
+    const phases: Record<number, string> = {
+      1: "2 sets of 3",
+      2: "1 set of 3 and 1 run of 4",
+      3: "1 set of 4 and 1 run of 4",
+      4: "1 run of 7",
+      5: "1 run of 8",
+      6: "1 run of 9",
+      7: "2 sets of 4",
+      8: "7 cards of a color",
+      9: "1 set of 5 and 1 set of 2",
+      10: "1 set of 5 and 1 set of 3",
+      [WINNER_PHASE]: "Completed phase 10",
+    };
 
-    const phase = phases.find((phase) => phase.phase === phaseNumber);
-
-    return phase?.name ?? "Invalid phase number";
+    return phases[phaseNumber] ?? "Invalid phase number";
   }
 }

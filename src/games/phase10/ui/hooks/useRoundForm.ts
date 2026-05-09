@@ -10,6 +10,7 @@ import {
   AddRoundInput,
 } from "@/games/phase10/domain/validation/rounds.schema";
 import { mapErrorToMessage } from "@core/ui/errors/mapErrorToMessage";
+import { PHASE_MIN, WINNER_PHASE } from "@/games/phase10/domain/constants";
 
 type PlayerFormRow = {
   id: string;
@@ -105,14 +106,24 @@ export function useRoundForm(gameId: string | undefined) {
     };
   }, [gameId, repo, form]);
 
+  // Max phase a player can be set to: current saved phase + 1 (one advancement per round), capped at WINNER_PHASE
+  const maxPhaseForPlayer = useCallback(
+    (index: number): number => {
+      if (!game) return WINNER_PHASE;
+      return Math.min(WINNER_PHASE, game.players[index].phase + 1);
+    },
+    [game],
+  );
+
   const handlePhaseChange = useCallback(
     (index: number, delta: number) => {
       const current = form.getFieldValue(`players[${index}].phase`) as number;
-      const next = Math.min(10, Math.max(1, current + delta));
+      const max = maxPhaseForPlayer(index);
+      const next = Math.min(max, Math.max(PHASE_MIN, current + delta));
 
       form.setFieldValue(`players[${index}].phase`, next);
     },
-    [form],
+    [form, maxPhaseForPlayer],
   );
 
   return {
@@ -122,5 +133,6 @@ export function useRoundForm(gameId: string | undefined) {
     error,
     playersValues,
     handlePhaseChange,
+    maxPhaseForPlayer,
   };
 }
