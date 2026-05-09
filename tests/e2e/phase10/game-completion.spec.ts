@@ -10,6 +10,7 @@ async function advancePlayerToPhase(
   gameId: string,
   playerIndex: number,
   targetPhase: number,
+  playerCount: number,
 ) {
   const { routes } = await import("@/app/routes");
 
@@ -20,7 +21,7 @@ async function advancePlayerToPhase(
     await page.getByTestId(`player-${playerIndex}-increase-phase`).click();
     await page.getByTestId(`player-${playerIndex}-score`).fill("0");
 
-    for (let j = 0; j < 3; j++) {
+    for (let j = 0; j < playerCount; j++) {
       if (j !== playerIndex) {
         await page.getByTestId(`player-${j}-score`).fill("0");
       }
@@ -42,7 +43,7 @@ test.describe("Phase 10 game completion", () => {
     ]);
 
     // Advance Alice to phase 10 (9 rounds)
-    await advancePlayerToPhase(page, gameId, 0, 10);
+    await advancePlayerToPhase(page, gameId, 0, 10, 3);
 
     // Now score the final round: push Alice to winner state
     const { routes } = await import("@/app/routes");
@@ -83,7 +84,7 @@ test.describe("Phase 10 game completion", () => {
   test("winner state can be reverted before saving", async ({ page }) => {
     const gameId = await createPhase10Game(page, ["Alice", "Bob", "Carol"]);
 
-    await advancePlayerToPhase(page, gameId, 0, 10);
+    await advancePlayerToPhase(page, gameId, 0, 10, 3);
 
     const { routes } = await import("@/app/routes");
     await page.goto(routes.phase10.scoreRound(gameId));
@@ -106,7 +107,7 @@ test.describe("Phase 10 game completion", () => {
   }) => {
     const gameId = await createPhase10Game(page, ["Alice", "Bob", "Carol"]);
 
-    await advancePlayerToPhase(page, gameId, 0, 10);
+    await advancePlayerToPhase(page, gameId, 0, 10, 3);
 
     const { routes } = await import("@/app/routes");
     await page.goto(routes.phase10.scoreRound(gameId));
@@ -139,34 +140,32 @@ test.describe("Phase 10 game completion", () => {
   }) => {
     const gameId = await createPhase10Game(page, ["Alice", "Bob", "Carol"]);
 
-    // Advance both Alice (index 0) and Bob (index 1) to phase 10
-    await advancePlayerToPhase(page, gameId, 0, 10);
+    // Advance Alice then Bob independently to phase 10
+    await advancePlayerToPhase(page, gameId, 0, 10, 3);
+    await advancePlayerToPhase(page, gameId, 1, 10, 3);
 
-    // Bob needs to catch up: advance Bob to phase 10 in separate rounds
-    // (this requires Bob to be at phase 1 still after 9 Alice-only rounds)
     const { routes } = await import("@/app/routes");
 
-    // Now score a round where BOTH Alice and Bob reach winner state with equal scores
+    // Final round: both Alice and Bob reach winner phase with equal scores
     await page.goto(routes.phase10.scoreRound(gameId));
     await page.waitForURL(/\/games\/phase10\/round-score/);
 
     await page.getByTestId("player-0-increase-phase").click(); // Alice → winner
-    await page.getByTestId("player-0-score").fill("30");
-
-    // Bob is still on phase 1, so we can only advance him by 1 per round
-    // For this tie scenario, we just verify Alice wins with the lower score
-    await page.getByTestId("player-1-score").fill("30");
-    await page.getByTestId("player-2-score").fill("30");
+    await page.getByTestId("player-1-increase-phase").click(); // Bob → winner
+    await page.getByTestId("player-0-score").fill("25");
+    await page.getByTestId("player-1-score").fill("25"); // equal score → tie
+    await page.getByTestId("player-2-score").fill("50");
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Save Round" }).click();
     await page.waitForURL(/\/games\/phase10\/game/);
 
     await expect(page.getByText("Game completed")).toBeVisible();
 
-    // Alice is the sole winner (only phase-11 player)
+    // Both Alice and Bob are at winner phase with the same score — both are winners
     const items = page.locator("[data-slot='item']");
-    const firstItem = items.first();
-    await expect(firstItem).toContainText("Winner");
+    await expect(items.nth(0)).toContainText("Winner");
+    await expect(items.nth(1)).toContainText("Winner");
+    await expect(items.nth(2)).not.toContainText("Winner");
   });
 
   test("non-winning completed player shows 'Completed phase 10' status", async ({

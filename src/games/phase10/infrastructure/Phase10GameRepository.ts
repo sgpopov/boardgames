@@ -6,6 +6,7 @@ import {
   fromStorage,
   toStorage,
 } from "@/games/phase10/infrastructure/mappers/storageMappers";
+import { WINNER_PHASE } from "@/games/phase10/domain/constants";
 
 const STORAGE_KEY = "phase10:games";
 
@@ -89,7 +90,7 @@ export class Phase10GameRepository implements GameRepository<Phase10Game> {
       8: "7 cards of a color",
       9: "1 set of 5 and 1 set of 2",
       10: "1 set of 5 and 1 set of 3",
-      11: "Completed phase 10",
+      [WINNER_PHASE]: "Completed phase 10",
     };
 
     return phases[phaseNumber] ?? "Invalid phase number";
