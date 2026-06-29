@@ -30,8 +30,14 @@ describe("ArkNova PlayersSchema", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects blank names", () => {
+  it("rejects empty names", () => {
     const result = validatePlayers({ players: [{ name: "" }] });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects whitespace-only names (matches submit-time trimming)", () => {
+    const result = validatePlayers({ players: [{ name: "   " }] });
 
     expect(result.success).toBe(false);
   });

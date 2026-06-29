@@ -6,7 +6,7 @@ export const PlayersSchema = z.object({
   players: z
     .array(
       z.object({
-        name: z.string().min(1, "Required"),
+        name: z.string().trim().min(1, "Required"),
       }),
     )
     .min(1, "At least one player")
