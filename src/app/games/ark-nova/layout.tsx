@@ -52,12 +52,9 @@ export default function ArkNovaLayout({
             />
             <span className="text-2xl font-semibold">Ark Nova</span>
           </Link>
-          <Link
-            href={routes.arkNova.newGame()}
-            className="text-sm underline self-center"
-          >
-            <Button>Create new game</Button>
-          </Link>
+          <Button asChild className="self-center">
+            <Link href={routes.arkNova.newGame()}>Create new game</Link>
+          </Button>
         </nav>
       </header>
       <main id="main-content" className="lg:mt-5 mx-auto max-w-7xl">

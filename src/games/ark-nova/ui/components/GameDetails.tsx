@@ -30,7 +30,7 @@ export function GameDetails(props: GameDetailsProps) {
 
   return (
     <div className="lg:mt-5 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 space-y-6">
-      <Alert variant={isCompleted ? "success" : "default"} aria-live="polite">
+      <Alert variant={isCompleted ? "success" : "default"}>
         {isCompleted ? (
           <BadgeCheckIcon aria-hidden="true" />
         ) : (

@@ -25,6 +25,12 @@ export class ArkNovaGameRepository implements GameRepository<ArkNovaGame> {
     const raw = this.storage.read<unknown[]>(STORAGE_KEY, []);
     const games: ArkNovaGame[] = [];
 
+    if (!Array.isArray(raw)) {
+      this.cache = games;
+
+      return [...games];
+    }
+
     for (const item of raw) {
       const game = fromStorage(item);
 

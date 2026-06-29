@@ -104,6 +104,13 @@ describe("ArkNovaGameRepository", () => {
     expect(await repo.getById("g1")).toBeDefined();
   });
 
+  it("fails closed (empty list) when stored value is not an array", async () => {
+    storage.write(STORAGE_KEY, { not: "an array" } as unknown);
+
+    expect(await repo.list()).toEqual([]);
+    expect(await repo.getById("anything")).toBeUndefined();
+  });
+
   it("filters out invalid records when reading from storage", async () => {
     const valid1 = makeGame({ id: "good-1" });
     const valid2 = makeGame({ id: "good-2" });
