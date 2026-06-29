@@ -3,6 +3,7 @@ import { routes } from "@/app/routes";
 import phase10Logo from "./phase10/ui/logo.jpg";
 import everdellBanner from "@games/everdell/assets/banner.png";
 import flip7banner from "@games/flip7/ui/assets/banner.jpg";
+import arkNovaBanner from "@games/ark-nova/assets/banner.jpg";
 
 export interface GameModuleDescriptor {
   id: string;
@@ -36,5 +37,13 @@ export const GAME_MODULES: GameModuleDescriptor[] = [
       "Score the cards in front of you, or take another card, risking everything you hold?",
     image: flip7banner,
     route: routes.flip7.list(),
+  },
+  {
+    id: "ark-nova",
+    name: "Ark Nova",
+    description:
+      "Plan and build a modern, scientifically managed zoo to support animal conservation projects",
+    image: arkNovaBanner,
+    route: routes.arkNova.list(),
   },
 ];
