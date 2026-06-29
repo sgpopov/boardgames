@@ -12,6 +12,12 @@ export const routes = {
     score: (id: string, component: string) =>
       `/games/everdell/add-scores?gameId=${id}&component=${component}`,
   },
+  arkNova: {
+    list: () => `/games/ark-nova`,
+    newGame: () => `/games/ark-nova/create-game`,
+    gameDetails: (id: string) => `/games/ark-nova/game?id=${id}`,
+    score: (id: string) => `/games/ark-nova/add-scores?gameId=${id}`,
+  },
   flip7: {
     list: () => `/games/flip7`,
     newGame: () => `/games/flip7/create-game`,
