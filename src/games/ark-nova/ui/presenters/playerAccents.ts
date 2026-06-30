@@ -1,7 +1,7 @@
 // Distinct accent per player slot (1–4), cycled if there are ever more.
 // Shared so the scoring form and the results view colour each player the same.
 export interface PlayerAccent {
-  // Left border used to highlight the winner row.
+  // Left-border accent for the player's slot.
   border: string;
   // Solid avatar background.
   avatar: string;

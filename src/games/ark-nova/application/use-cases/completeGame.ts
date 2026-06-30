@@ -3,7 +3,7 @@ import { GameAlreadyCompletedError } from "@core/domain/errors/GameAlreadyComple
 import { GameNotFoundError } from "@core/domain/errors/GameNotFoundError";
 import { ValidationError } from "@core/domain/errors/ValidationError";
 import { ArkNovaGame } from "@/games/ark-nova/application/entities/ArkNovaGame";
-import { computeWinners } from "@/games/ark-nova/application/winners";
+import { computeWinners, isScored } from "@/games/ark-nova/application/winners";
 
 type CompleteGameProps = {
   repository: GameRepository<ArkNovaGame>;
@@ -26,9 +26,7 @@ export async function completeArkNovaGame({
     throw new GameAlreadyCompletedError();
   }
 
-  const allScored = game.players.every(
-    (player) => player.officialVp !== null && player.alternativeVp !== null,
-  );
+  const allScored = game.players.every(isScored);
 
   if (!allScored) {
     throw new ValidationError(

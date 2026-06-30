@@ -13,6 +13,18 @@ export function victoryPointsFor(
   return method === "official" ? player.officialVp : player.alternativeVp;
 }
 
+// A player is fully scored once every input and its derived VP is present.
+// Both the completion guard and winner computation share this one definition so
+// they can't disagree about whether a player counts as scored.
+export function isScored(player: ArkNovaPlayer): boolean {
+  return (
+    player.appeal !== null &&
+    player.conservationPoints !== null &&
+    player.officialVp !== null &&
+    player.alternativeVp !== null
+  );
+}
+
 // Winners for one method: the highest VP wins; ties break on higher appeal;
 // players still tied after that are joint winners. Unscored players are
 // ignored. The two methods can diverge only at CP 0 (see ADR 0001) — for all
@@ -21,9 +33,7 @@ function winnersForMethod(
   players: ArkNovaPlayer[],
   method: ScoringMethod,
 ): string[] {
-  const scored = players.filter(
-    (player) => victoryPointsFor(player, method) !== null && player.appeal !== null,
-  );
+  const scored = players.filter(isScored);
 
   if (scored.length === 0) {
     return [];
