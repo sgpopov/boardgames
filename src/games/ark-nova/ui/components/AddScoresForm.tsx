@@ -1,19 +1,22 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { Bird, Fish, Rabbit, Turtle, type LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { routes } from "@/app/routes";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { getFieldErrorMessage } from "@/core/ui/errors/getFieldErrorMessage";
+import appealIcon from "@games/ark-nova/assets/appeal.png";
+import conservationIcon from "@games/ark-nova/assets/conservation.png";
 import { ArkNovaGame } from "@/games/ark-nova/application/entities/ArkNovaGame";
 import { useAddScores } from "@/games/ark-nova/ui/hooks/useAddScores";
 import { computeScorePreview } from "@/games/ark-nova/ui/presenters/scorePreview";
@@ -27,9 +30,50 @@ interface Props {
   onScoresSaved?: (game: ArkNovaGame) => void;
 }
 
-function formatVp(value: number): string {
-  return value > 0 ? `+${value}` : String(value);
-}
+type Accent = {
+  border: string;
+  avatar: string;
+  vp: string;
+  chip: string;
+  animalColor: string;
+  animal: LucideIcon;
+};
+
+// One distinct accent per player slot (1–4), cycled if there are ever more.
+const ACCENTS: Accent[] = [
+  {
+    border: "border-l-emerald-600",
+    avatar: "bg-emerald-600",
+    vp: "text-emerald-700",
+    chip: "bg-emerald-100 text-emerald-700",
+    animalColor: "text-emerald-600",
+    animal: Bird,
+  },
+  {
+    border: "border-l-blue-600",
+    avatar: "bg-blue-600",
+    vp: "text-blue-700",
+    chip: "bg-blue-100 text-blue-700",
+    animalColor: "text-blue-600",
+    animal: Fish,
+  },
+  {
+    border: "border-l-amber-500",
+    avatar: "bg-amber-500",
+    vp: "text-amber-700",
+    chip: "bg-amber-100 text-amber-700",
+    animalColor: "text-amber-600",
+    animal: Rabbit,
+  },
+  {
+    border: "border-l-violet-600",
+    avatar: "bg-violet-600",
+    vp: "text-violet-700",
+    chip: "bg-violet-100 text-violet-700",
+    animalColor: "text-violet-600",
+    animal: Turtle,
+  },
+];
 
 export function AddScoresForm({ gameId, onScoresSaved }: Props) {
   const { form, game, loading, players } = useAddScores({
@@ -76,49 +120,63 @@ export function AddScoresForm({ gameId, onScoresSaved }: Props) {
     .join(". ");
 
   return (
-    <Card className="rounded-none border-0">
-      <CardHeader className="flex items-center justify-between border-b">
-        <CardTitle>
-          <h1>Final scoring</h1>
-        </CardTitle>
-        <CardAction>
+    <div className="p-5 space-y-6">
+      <header className="space-y-2">
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-2xl font-bold">Final scoring</h1>
           <Link
             href={routes.arkNova.gameDetails(gameId)}
-            className="text-sm underline"
+            className="text-sm underline self-center"
           >
             Go back
           </Link>
-        </CardAction>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
+        </div>
         <p className="text-sm text-muted-foreground">
           Enter each player&apos;s appeal (0–113) and conservation points
           (0–41). Victory points for both scoring methods update as you type.
         </p>
+      </header>
 
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            await form.handleSubmit();
-          }}
-        >
-          <div className="space-y-6 pb-10">
-            {players.map((row, i) => {
-              const preview = computeScorePreview(
-                row.appeal,
-                row.conservationPoints,
-              );
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          await form.handleSubmit();
+        }}
+      >
+        <div className="space-y-4 pb-10">
+          {players.map((row, i) => {
+            const preview = computeScorePreview(
+              row.appeal,
+              row.conservationPoints,
+            );
+            const accent = ACCENTS[i % ACCENTS.length];
+            const Animal = accent.animal;
 
-              return (
-                <fieldset
-                  key={row.playerId}
-                  className="space-y-3 rounded-lg border p-4"
-                >
-                  <legend className="px-1 font-medium">{row.name}</legend>
+            return (
+              <Card
+                key={row.playerId}
+                className={cn("border-l-4 gap-0 py-0", accent.border)}
+              >
+                <CardHeader className="flex items-center gap-3 border-b py-4 [.border-b]:pb-4">
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "flex size-8 items-center justify-center rounded-full text-sm font-semibold text-white",
+                      accent.avatar,
+                    )}
+                  >
+                    {row.name[0]?.toUpperCase()}
+                  </span>
+                  <h2 className="text-lg font-semibold">{row.name}</h2>
+                  <Animal
+                    className={cn("ml-auto size-7", accent.animalColor)}
+                    aria-hidden="true"
+                  />
+                </CardHeader>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <CardContent className="space-y-4 py-4">
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     <form.Field
                       name={`players[${i}].appeal`}
                       validators={{
@@ -133,17 +191,31 @@ export function AddScoresForm({ gameId, onScoresSaved }: Props) {
                           <FieldLabel htmlFor={`player-${i}-appeal`}>
                             Appeal
                           </FieldLabel>
-                          <Input
-                            id={`player-${i}-appeal`}
-                            type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            value={field.state.value as string}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            onBlur={field.handleBlur}
-                            aria-invalid={!field.state.meta.isValid}
-                            placeholder="0"
-                          />
+                          <InputGroup>
+                            <InputGroupInput
+                              id={`player-${i}-appeal`}
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              aria-label="Appeal"
+                              className="text-lg font-medium"
+                              value={field.state.value as string}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              onBlur={field.handleBlur}
+                              aria-invalid={!field.state.meta.isValid}
+                              placeholder="0"
+                            />
+                            <InputGroupAddon align="inline-end">
+                              <Image
+                                src={appealIcon}
+                                alt=""
+                                aria-hidden="true"
+                                className="h-6 w-auto"
+                              />
+                            </InputGroupAddon>
+                          </InputGroup>
                           {!field.state.meta.isValid && (
                             <FieldError>
                               {getFieldErrorMessage(field.state.meta.errors)}
@@ -167,17 +239,31 @@ export function AddScoresForm({ gameId, onScoresSaved }: Props) {
                           <FieldLabel htmlFor={`player-${i}-cp`}>
                             Conservation points
                           </FieldLabel>
-                          <Input
-                            id={`player-${i}-cp`}
-                            type="text"
-                            inputMode="numeric"
-                            pattern="[0-9]*"
-                            value={field.state.value as string}
-                            onChange={(e) => field.handleChange(e.target.value)}
-                            onBlur={field.handleBlur}
-                            aria-invalid={!field.state.meta.isValid}
-                            placeholder="0"
-                          />
+                          <InputGroup>
+                            <InputGroupInput
+                              id={`player-${i}-cp`}
+                              type="text"
+                              inputMode="numeric"
+                              pattern="[0-9]*"
+                              aria-label="Conservation points"
+                              className="text-lg font-medium"
+                              value={field.state.value as string}
+                              onChange={(e) =>
+                                field.handleChange(e.target.value)
+                              }
+                              onBlur={field.handleBlur}
+                              aria-invalid={!field.state.meta.isValid}
+                              placeholder="0"
+                            />
+                            <InputGroupAddon align="inline-end">
+                              <Image
+                                src={conservationIcon}
+                                alt=""
+                                aria-hidden="true"
+                                className="h-6 w-auto"
+                              />
+                            </InputGroupAddon>
+                          </InputGroup>
                           {!field.state.meta.isValid && (
                             <FieldError>
                               {getFieldErrorMessage(field.state.meta.errors)}
@@ -188,43 +274,77 @@ export function AddScoresForm({ gameId, onScoresSaved }: Props) {
                     </form.Field>
                   </div>
 
-                  <dl className="flex gap-6 text-sm">
-                    <div>
-                      <dt className="text-muted-foreground">Official VP</dt>
-                      <dd className="text-lg font-semibold tabular-nums">
-                        {preview ? formatVp(preview.officialVp) : "—"}
+                  <dl className="grid grid-cols-2 divide-x border-t pt-4">
+                    <div className="flex flex-col items-center gap-1 text-center">
+                      <dt className="text-sm text-muted-foreground">
+                        Official VP
+                      </dt>
+                      <dd className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "text-3xl font-bold tabular-nums",
+                            accent.vp,
+                          )}
+                        >
+                          {preview ? preview.officialVp : "—"}
+                        </span>
+                        <span
+                          className={cn(
+                            "rounded px-1.5 py-0.5 text-xs font-semibold",
+                            accent.chip,
+                          )}
+                        >
+                          VP
+                        </span>
                       </dd>
                     </div>
-                    <div>
-                      <dt className="text-muted-foreground">Alternative VP</dt>
-                      <dd className="text-lg font-semibold tabular-nums">
-                        {preview ? formatVp(preview.alternativeVp) : "—"}
+                    <div className="flex flex-col items-center gap-1 text-center">
+                      <dt className="text-sm text-muted-foreground">
+                        Alternative VP
+                      </dt>
+                      <dd className="flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "text-3xl font-bold tabular-nums",
+                            accent.vp,
+                          )}
+                        >
+                          {preview ? preview.alternativeVp : "—"}
+                        </span>
+                        <span
+                          className={cn(
+                            "rounded px-1.5 py-0.5 text-xs font-semibold",
+                            accent.chip,
+                          )}
+                        >
+                          VP
+                        </span>
                       </dd>
                     </div>
                   </dl>
-                </fieldset>
-              );
-            })}
-          </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
-          <p role="status" aria-live="polite" className="sr-only">
-            {liveSummary}
-          </p>
+        <p role="status" aria-live="polite" className="sr-only">
+          {liveSummary}
+        </p>
 
-          <div className="flex justify-center">
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-            >
-              {([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit || isSubmitting}>
-                  {isSubmitting ? "Saving..." : "Save scores"}
-                </Button>
-              )}
-            </form.Subscribe>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        <div className="flex justify-center">
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          >
+            {([canSubmit, isSubmitting]) => (
+              <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                {isSubmitting ? "Saving..." : "Save scores"}
+              </Button>
+            )}
+          </form.Subscribe>
+        </div>
+      </form>
+    </div>
   );
 }
 
