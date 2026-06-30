@@ -67,14 +67,16 @@ test.describe("Ark Nova - Game details", () => {
     await expect(page.getByText("WINNER", { exact: true })).toBeVisible();
     await expect(page.getByText("Alice").first()).toBeVisible();
 
-    // Method tabs switch the ranking.
-    const officialTab = page.getByRole("tab", { name: "Official VP" });
-    const alternativeTab = page.getByRole("tab", { name: "Alternative VP" });
-    await expect(officialTab).toHaveAttribute("aria-selected", "true");
+    // Method toggle switches the ranking.
+    const officialToggle = page.getByRole("button", { name: "Official VP" });
+    const alternativeToggle = page.getByRole("button", {
+      name: "Alternative VP",
+    });
+    await expect(officialToggle).toHaveAttribute("aria-pressed", "true");
 
-    await alternativeTab.click();
-    await expect(alternativeTab).toHaveAttribute("aria-selected", "true");
-    await expect(officialTab).toHaveAttribute("aria-selected", "false");
+    await alternativeToggle.click();
+    await expect(alternativeToggle).toHaveAttribute("aria-pressed", "true");
+    await expect(officialToggle).toHaveAttribute("aria-pressed", "false");
 
     // Completed games are read-only: no edit / complete / breakdown actions.
     await expect(
@@ -99,7 +101,7 @@ test.describe("Ark Nova - Game details", () => {
     await completeGame(page);
 
     await expect(
-      page.getByRole("tab", { name: "Official VP" }),
+      page.getByRole("button", { name: "Official VP" }),
     ).toBeVisible();
 
     const scanResults = await new AxeBuilder({ page }).analyze();

@@ -197,7 +197,7 @@ function MethodTabs({
 }) {
   return (
     <div
-      role="tablist"
+      role="group"
       aria-label="Scoring method"
       className="flex w-full gap-1 rounded-xl border bg-muted/60 p-1"
     >
@@ -208,8 +208,7 @@ function MethodTabs({
           <button
             key={key}
             type="button"
-            role="tab"
-            aria-selected={selected}
+            aria-pressed={selected}
             onClick={() => onChange(key)}
             className={cn(
               "flex-1 rounded-lg px-4 py-2 text-sm font-semibold transition-colors",
@@ -421,7 +420,9 @@ export function GameDetails(props: GameDetailsProps) {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={routes.arkNova.score(game.id)}>Edit scores</Link>
+                  <Link href={routes.arkNova.score(game.id)}>
+                    {anyScored ? "Edit scores" : "Enter scores"}
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={!allScored}
