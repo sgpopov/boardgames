@@ -104,6 +104,33 @@ describe("ArkNovaGameRepository", () => {
     expect(await repo.getById("g1")).toBeDefined();
   });
 
+  it("round-trips a player's appeal / CP / VP snapshot", async () => {
+    const scored = makeGame({
+      id: "scored",
+      players: [
+        makePlayer({
+          id: "p1",
+          name: "Alice",
+          appeal: 70,
+          conservationPoints: 22,
+          officialVp: 12,
+          alternativeVp: 112,
+        }),
+      ],
+    });
+
+    await repo.save(scored);
+
+    const stored = await repo.getById("scored");
+
+    expect(stored!.players[0]).toMatchObject({
+      appeal: 70,
+      conservationPoints: 22,
+      officialVp: 12,
+      alternativeVp: 112,
+    });
+  });
+
   it("fails closed (empty list) when stored value is not an array", async () => {
     storage.write(STORAGE_KEY, { not: "an array" } as unknown);
 
