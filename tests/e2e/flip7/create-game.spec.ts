@@ -4,6 +4,12 @@ import { test, expect } from "@playwright/test";
 test("a11y smoke - no games", async ({ page }) => {
   await page.goto("/games/flip7");
 
+  // Wait for the client-rendered content to hydrate before scanning, otherwise
+  // axe can run against the pre-hydration HTML and report a missing <h1>.
+  await expect(
+    page.getByRole("heading", { name: "No games found" }),
+  ).toBeVisible();
+
   const scanResults = await new AxeBuilder({ page })
     .disableRules(["color-contrast"])
     .analyze();
@@ -19,15 +25,20 @@ test("creates Flip7 game", async ({ page }) => {
   await expect(page).toHaveURL(/\/games\/flip7\/create-game/);
   await expect(page.getByRole("heading", { name: "New Game" })).toBeVisible();
 
-  // Fill player names
-  await page.getByLabel("Player 1").fill("James Bond");
-  await page.getByLabel("Player 2").fill("Bruce Wayne");
-  await page.getByLabel("Player 3").fill("Barry Allen");
+  // Fill player names (re-fill until the form is submittable so we don't race
+  // client hydration, which would otherwise discard the typed values).
+  const submit = page.getByRole("button", { name: "Create game" });
 
-  await page.keyboard.press("Tab");
+  await expect(async () => {
+    await page.getByLabel("Player 1").fill("James Bond");
+    await page.getByLabel("Player 2").fill("Bruce Wayne");
+    await page.getByLabel("Player 3").fill("Barry Allen");
+
+    await expect(submit).toBeEnabled({ timeout: 1000 });
+  }).toPass({ timeout: 15_000 });
 
   // Submit the form
-  await page.getByRole("button", { name: "Create game" }).click();
+  await submit.click();
 
   // Wait for navigation to details page
   await expect(page).toHaveURL(/\/games\/flip7\/game\?id=/);
@@ -40,9 +51,9 @@ test("creates Flip7 game", async ({ page }) => {
 
   const expectedNames = ["James Bond", "Bruce Wayne", "Barry Allen"];
 
-  const players = await page.locator("[data-slot='item']").all();
-
-  expect(players.length).toBe(3);
+  const items = page.locator("[data-slot='item']");
+  await expect(items).toHaveCount(3);
+  const players = await items.all();
 
   for (const player of players) {
     const playerName = await player

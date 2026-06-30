@@ -9,6 +9,9 @@ test.describe("Flip 7 FAQ", () => {
   test("a11y smoke", async ({ page }) => {
     await page.goto("/games/flip7/faq");
 
+    // Wait for the client-rendered content before scanning the hydrated page.
+    await expect(page.getByRole("heading", { name: "FAQ" })).toBeVisible();
+
     const scanResults = await new AxeBuilder({ page }).analyze();
 
     expect(scanResults.violations).toEqual([]);

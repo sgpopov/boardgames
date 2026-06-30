@@ -7,6 +7,9 @@ test.describe("Flip 7 - Games list", () => {
   });
 
   test("a11y smoke", async ({ page }) => {
+    // Wait for the client-rendered content before scanning the hydrated page.
+    await expect(page.getByText("No games found")).toBeVisible();
+
     const scanResults = await new AxeBuilder({ page }).analyze();
 
     expect(scanResults.violations).toEqual([]);
@@ -31,11 +34,17 @@ test.describe("Flip 7 - Games list", () => {
   }) => {
     await page.getByRole("link", { name: "Create new game" }).click();
 
-    await page.getByLabel("Player 1").fill("James Bond");
-    await page.getByLabel("Player 2").fill("Bruce Wayne");
-    await page.getByLabel("Player 3").fill("Barry Allen");
-    await page.keyboard.press("Tab");
-    await page.getByRole("button", { name: "Create game" }).click();
+    const submit = page.getByRole("button", { name: "Create game" });
+
+    await expect(async () => {
+      await page.getByLabel("Player 1").fill("James Bond");
+      await page.getByLabel("Player 2").fill("Bruce Wayne");
+      await page.getByLabel("Player 3").fill("Barry Allen");
+
+      await expect(submit).toBeEnabled({ timeout: 1000 });
+    }).toPass({ timeout: 15_000 });
+
+    await submit.click();
     await page.waitForURL(/\/games\/flip7\/game\?id=/);
 
     await page.goto("/games/flip7");

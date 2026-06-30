@@ -46,7 +46,7 @@ export default function ArkNovaLayout({
           >
             <Image
               src={logo}
-              alt="Ark Nova"
+              alt=""
               className="h-10 w-auto rounded"
               loading="eager"
             />

@@ -14,9 +14,11 @@ test("homepage should list all supported games", async ({ page }) => {
     "/games/phase10",
     "/games/everdell",
     "/games/flip7",
+    "/games/ark-nova",
   ]);
 
   await expect(page.getByRole("heading", { name: "Phase 10" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Everdell" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Flip 7" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Ark Nova" })).toBeVisible();
 });
