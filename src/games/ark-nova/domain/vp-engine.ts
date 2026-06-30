@@ -52,8 +52,12 @@ export function computeVictoryPoints(
   appeal: number,
   conservationPoints: number,
 ): VictoryPoints {
+  // Validate once, then read both tables directly (avoids re-running the
+  // input guard twice — this runs on every keystroke via the live preview).
+  assertValidInputs(appeal, conservationPoints);
+
   return {
-    officialVp: officialVp(appeal, conservationPoints),
-    alternativeVp: alternativeVp(appeal, conservationPoints),
+    officialVp: appeal - OFFICIAL_THRESHOLDS[conservationPoints],
+    alternativeVp: appeal + ALTERNATIVE_BONUSES[conservationPoints],
   };
 }

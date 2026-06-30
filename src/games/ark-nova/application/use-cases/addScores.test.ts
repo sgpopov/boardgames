@@ -142,6 +142,33 @@ describe("addArkNovaScores", () => {
     ).rejects.toThrow(GameAlreadyCompletedError);
   });
 
+  it("throws a ValidationError for an unknown player id", async () => {
+    const repo = new InMemoryArkNovaRepo(makeGame());
+
+    await expect(
+      addArkNovaScores({
+        repository: repo,
+        gameId: "g1",
+        scores: [{ playerId: "ghost", appeal: 50, conservationPoints: 20 }],
+      }),
+    ).rejects.toThrow(ValidationError);
+  });
+
+  it("throws a ValidationError for a duplicate player id", async () => {
+    const repo = new InMemoryArkNovaRepo(makeGame());
+
+    await expect(
+      addArkNovaScores({
+        repository: repo,
+        gameId: "g1",
+        scores: [
+          { playerId: "p1", appeal: 50, conservationPoints: 20 },
+          { playerId: "p1", appeal: 60, conservationPoints: 25 },
+        ],
+      }),
+    ).rejects.toThrow(ValidationError);
+  });
+
   it("throws a ValidationError on out-of-range input", async () => {
     const repo = new InMemoryArkNovaRepo(makeGame());
 

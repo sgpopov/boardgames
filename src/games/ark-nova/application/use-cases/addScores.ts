@@ -38,8 +38,31 @@ export async function addArkNovaScores({
   if (!validation.success) {
     throw new ValidationError(
       "Invalid scores",
-      validation.error.issues.map((issue) => issue.message).join("; "),
+      validation.error.issues
+        .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
+        .join("; "),
     );
+  }
+
+  const knownPlayerIds = new Set(game.players.map((player) => player.id));
+  const seenPlayerIds = new Set<string>();
+
+  for (const score of scores) {
+    if (!knownPlayerIds.has(score.playerId)) {
+      throw new ValidationError(
+        "Invalid scores",
+        `Unknown player id '${score.playerId}'`,
+      );
+    }
+
+    if (seenPlayerIds.has(score.playerId)) {
+      throw new ValidationError(
+        "Invalid scores",
+        `Duplicate score for player id '${score.playerId}'`,
+      );
+    }
+
+    seenPlayerIds.add(score.playerId);
   }
 
   const scoreByPlayer = new Map(scores.map((score) => [score.playerId, score]));
