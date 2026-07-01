@@ -44,7 +44,7 @@ import {
   LeaderboardRow,
 } from "@/games/ark-nova/ui/presenters/leaderboard";
 import {
-  accentForIndex,
+  accentForColor,
   initialFor,
   PlayerAccent,
 } from "@/games/ark-nova/ui/presenters/playerAccents";
@@ -274,8 +274,9 @@ function PlayerRow({
           )}
           <span
             className={cn(
-              "flex size-10 items-center justify-center rounded-full text-base font-semibold text-white",
+              "flex size-10 items-center justify-center rounded-full text-base font-semibold",
               accent.avatar,
+              accent.avatarText,
             )}
           >
             {initialFor(row.player.name)}
@@ -363,9 +364,9 @@ export function GameDetails(props: GameDetailsProps) {
   const allScored = game.players.every(isScored);
   const anyScored = game.players.some(isScored);
 
-  // Each player keeps the colour of their original slot, regardless of rank.
+  // Each player keeps their own chosen color, regardless of rank.
   const accentByPlayerId = new Map(
-    game.players.map((player, index) => [player.id, accentForIndex(index)]),
+    game.players.map((player) => [player.id, accentForColor(player.color)]),
   );
 
   const winners = game.winners ?? { official: [], alternative: [] };
@@ -469,7 +470,10 @@ export function GameDetails(props: GameDetailsProps) {
             key={row.player.id}
             row={row}
             rank={index + 1}
-            accent={accentByPlayerId.get(row.player.id) ?? accentForIndex(0)}
+            accent={
+              accentByPlayerId.get(row.player.id) ??
+              accentForColor(row.player.color)
+            }
             method={method}
             isCompleted={isCompleted}
             expanded={expandedId === row.player.id}

@@ -10,6 +10,8 @@ const makePlayer = (details: Partial<ArkNovaPlayer> = {}): ArkNovaPlayer => {
   return {
     id: details.id ?? "p1",
     name: details.name ?? "James Bond",
+    color: details.color ?? "blue",
+    icon: details.icon ?? "bird",
     appeal: details.appeal ?? null,
     conservationPoints: details.conservationPoints ?? null,
     officialVp: details.officialVp ?? null,

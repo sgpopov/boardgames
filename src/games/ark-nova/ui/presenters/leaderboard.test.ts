@@ -16,6 +16,8 @@ const makePlayer = (
   return {
     id,
     name: id,
+    color: "blue",
+    icon: "bird",
     appeal,
     conservationPoints,
     officialVp,
@@ -63,6 +65,8 @@ describe("buildLeaderboard", () => {
     const unscored: ArkNovaPlayer = {
       id: "p2",
       name: "p2",
+      color: "yellow",
+      icon: "fish",
       appeal: null,
       conservationPoints: null,
       officialVp: null,

@@ -11,36 +11,47 @@ type PlayersSchemaContract = {
   safeParse: (input: unknown) => { success: boolean };
 };
 
-type UseCreateGamePlayersFormOptions<TGame> = {
+type UseCreateGamePlayersFormOptions<
+  TGame,
+  TPlayerRow extends PlayerRow = PlayerRow,
+> = {
   maxPlayers: number;
   defaultPlayerCount?: number;
   playersSchema: PlayersSchemaContract;
-  createGame: (players: PlayerRow[]) => Promise<TGame>;
+  createGame: (players: TPlayerRow[]) => Promise<TGame>;
   onGameCreated: (game: TGame) => void;
+  // Override for player rows with fields beyond `name` (e.g. Ark Nova's color).
+  createDefaultPlayer?: () => TPlayerRow;
 };
 
-export function useCreateGamePlayersForm<TGame>({
+export function useCreateGamePlayersForm<
+  TGame,
+  TPlayerRow extends PlayerRow = PlayerRow,
+>({
   maxPlayers,
   defaultPlayerCount = 1,
   playersSchema,
   createGame,
   onGameCreated,
-}: UseCreateGamePlayersFormOptions<TGame>) {
+  createDefaultPlayer = () => ({ name: "" }) as TPlayerRow,
+}: UseCreateGamePlayersFormOptions<TGame, TPlayerRow>) {
   const form = useForm({
     defaultValues: {
-      players: Array.from({ length: defaultPlayerCount }, () => ({
-        name: "",
-      })) as PlayerRow[],
+      players: Array.from({ length: defaultPlayerCount }, createDefaultPlayer),
     },
+    // No onBlur validator: it would stamp a stale error onto whichever field
+    // hasn't fired handleBlur yet (e.g. a button-based picker), and never
+    // clear it since onChange revalidation doesn't touch the onBlur error
+    // slot. onChange already validates on every value change.
     validators: {
       onChange: playersSchema as never,
-      onBlur: playersSchema as never,
       onSubmit: playersSchema as never,
     },
     onSubmit: async ({ value }) => {
       const players = value.players.map((player) => ({
+        ...player,
         name: player.name.trim(),
-      }));
+      })) as TPlayerRow[];
 
       const result = playersSchema.safeParse({ players });
 
@@ -54,15 +65,18 @@ export function useCreateGamePlayersForm<TGame>({
     },
   });
 
-  const players = useStore(form.store, (s) => s.values.players) as PlayerRow[];
+  const players = useStore(
+    form.store,
+    (s) => s.values.players,
+  ) as TPlayerRow[];
 
   const addPlayer = useCallback(() => {
     if (players.length >= maxPlayers) {
       return;
     }
 
-    form.setFieldValue("players", [...players, { name: "" }]);
-  }, [form, maxPlayers, players]);
+    form.pushFieldValue("players", createDefaultPlayer() as never);
+  }, [form, maxPlayers, players.length, createDefaultPlayer]);
 
   return {
     form,

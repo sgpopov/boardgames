@@ -6,8 +6,17 @@ async function createGame(page: Page) {
 
   await page.getByRole("button", { name: "Add Player" }).click();
 
-  await page.getByLabel("Player 1").fill("Alice");
-  await page.getByLabel("Player 2").fill("Bob");
+  await page.getByLabel("Player 1", { exact: true }).fill("Alice");
+  await page.getByLabel("Player 2", { exact: true }).fill("Bob");
+
+  await page
+    .getByRole("group", { name: "Player 1 color" })
+    .getByRole("button", { name: "Blue" })
+    .click();
+  await page
+    .getByRole("group", { name: "Player 2 color" })
+    .getByRole("button", { name: "Yellow" })
+    .click();
 
   await page.keyboard.press("Tab");
   await page.getByRole("button", { name: "Create game" }).click();
