@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 import { GameRepository } from "@core/domain/repositories/GameRepository";
 import { DuplicatePlayerNameError } from "@core/domain/errors/DuplicatePlayerNameError";
+import { DuplicatePlayerColorError } from "@core/domain/errors/DuplicatePlayerColorError";
 import { hasDuplicateNames } from "@core/domain/validation/uniqueNames";
 import { ANIMAL_ICONS, AnimalIcon } from "@/games/ark-nova/domain/constants";
 import {
@@ -29,6 +30,10 @@ export async function createArkNovaGame(
 ) {
   if (hasDuplicateNames(players)) {
     throw new DuplicatePlayerNameError();
+  }
+
+  if (new Set(players.map((p) => p.color)).size !== players.length) {
+    throw new DuplicatePlayerColorError();
   }
 
   const icons = shuffleIcons([...ANIMAL_ICONS]);

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createArkNovaGame } from "@/games/ark-nova/application/use-cases/createGame";
 import { InMemoryArkNovaRepo } from "@/games/ark-nova/tests/mock-repository";
 import { DuplicatePlayerNameError } from "@/core/domain/errors/DuplicatePlayerNameError";
+import { DuplicatePlayerColorError } from "@/core/domain/errors/DuplicatePlayerColorError";
 import { ANIMAL_ICONS } from "@/games/ark-nova/domain/constants";
 
 describe("createArkNovaGame", () => {
@@ -64,6 +65,17 @@ describe("createArkNovaGame", () => {
         { name: " bruce ", color: "yellow" },
       ]),
     ).rejects.toThrow(DuplicatePlayerNameError);
+  });
+
+  it("throws on duplicate player colors, even though the UI already prevents it", async () => {
+    const repo = new InMemoryArkNovaRepo(null);
+
+    await expect(
+      createArkNovaGame(repo, [
+        { name: "Alice", color: "blue" },
+        { name: "Bob", color: "blue" },
+      ]),
+    ).rejects.toThrow(DuplicatePlayerColorError);
   });
 
   it("assigns each player a distinct icon, independent of color, using the injected shuffle", async () => {

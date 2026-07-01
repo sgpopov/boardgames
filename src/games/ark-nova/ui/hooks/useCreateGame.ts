@@ -14,6 +14,10 @@ type HookProps = {
 // Color starts unset ("") until the player picks one manually.
 export type ArkNovaPlayerRow = { name: string; color: PlayerColor | "" };
 
+function isPlayerColor(color: PlayerColor | ""): color is PlayerColor {
+  return color !== "";
+}
+
 export function useCreateGame(props: HookProps) {
   const repo = useArkNovaRepo();
 
@@ -21,11 +25,17 @@ export function useCreateGame(props: HookProps) {
     maxPlayers: MAX_PLAYERS_ALLOWED,
     playersSchema: PlayersSchema,
     createDefaultPlayer: () => ({ name: "", color: "" }),
-    createGame: (players) =>
-      createArkNovaGame(
-        repo,
-        players.map((p) => ({ name: p.name, color: p.color as PlayerColor })),
-      ),
+    createGame: (players) => {
+      const validated = players.map((p) => {
+        if (!isPlayerColor(p.color)) {
+          throw new Error(`Player "${p.name}" has no color selected.`);
+        }
+
+        return { name: p.name, color: p.color };
+      });
+
+      return createArkNovaGame(repo, validated);
+    },
     onGameCreated: props.onGameCreated,
   });
 }
