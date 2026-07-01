@@ -12,6 +12,8 @@ import { ValidationError } from "@/core/domain/errors/ValidationError";
 const makePlayer = (details: Partial<ArkNovaPlayer> = {}): ArkNovaPlayer => ({
   id: details.id ?? "p1",
   name: details.name ?? "Alice",
+  color: details.color ?? "blue",
+  icon: details.icon ?? "bird",
   appeal: details.appeal ?? null,
   conservationPoints: details.conservationPoints ?? null,
   officialVp: details.officialVp ?? null,

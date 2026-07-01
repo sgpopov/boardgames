@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Bird, Fish, Rabbit, Turtle, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { routes } from "@/app/routes";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -20,6 +19,8 @@ import conservationIcon from "@games/ark-nova/assets/conservation.png";
 import { ArkNovaGame } from "@/games/ark-nova/application/entities/ArkNovaGame";
 import { useAddScores } from "@/games/ark-nova/ui/hooks/useAddScores";
 import { computeScorePreview } from "@/games/ark-nova/ui/presenters/scorePreview";
+import { accentForColor } from "@/games/ark-nova/ui/presenters/playerAccents";
+import { animalIconFor } from "@/games/ark-nova/ui/presenters/animalIcons";
 import {
   validateAppealField,
   validateConservationPointsField,
@@ -29,51 +30,6 @@ interface Props {
   gameId: string;
   onScoresSaved?: (game: ArkNovaGame) => void;
 }
-
-type Accent = {
-  border: string;
-  avatar: string;
-  vp: string;
-  chip: string;
-  animalColor: string;
-  animal: LucideIcon;
-};
-
-// One distinct accent per player slot (1–4), cycled if there are ever more.
-const ACCENTS: Accent[] = [
-  {
-    border: "border-l-emerald-600",
-    avatar: "bg-emerald-600",
-    vp: "text-emerald-700",
-    chip: "bg-emerald-100 text-emerald-700",
-    animalColor: "text-emerald-600",
-    animal: Bird,
-  },
-  {
-    border: "border-l-blue-600",
-    avatar: "bg-blue-600",
-    vp: "text-blue-700",
-    chip: "bg-blue-100 text-blue-700",
-    animalColor: "text-blue-600",
-    animal: Fish,
-  },
-  {
-    border: "border-l-amber-500",
-    avatar: "bg-amber-500",
-    vp: "text-amber-700",
-    chip: "bg-amber-100 text-amber-700",
-    animalColor: "text-amber-600",
-    animal: Rabbit,
-  },
-  {
-    border: "border-l-violet-600",
-    avatar: "bg-violet-600",
-    vp: "text-violet-700",
-    chip: "bg-violet-100 text-violet-700",
-    animalColor: "text-violet-600",
-    animal: Turtle,
-  },
-];
 
 export function AddScoresForm({ gameId, onScoresSaved }: Props) {
   const { form, game, loading, players } = useAddScores({
@@ -150,8 +106,8 @@ export function AddScoresForm({ gameId, onScoresSaved }: Props) {
               row.appeal,
               row.conservationPoints,
             );
-            const accent = ACCENTS[i % ACCENTS.length];
-            const Animal = accent.animal;
+            const accent = accentForColor(row.color);
+            const Animal = animalIconFor(row.icon);
 
             return (
               <Card
@@ -162,15 +118,16 @@ export function AddScoresForm({ gameId, onScoresSaved }: Props) {
                   <span
                     aria-hidden="true"
                     className={cn(
-                      "flex size-8 items-center justify-center rounded-full text-sm font-semibold text-white",
+                      "flex size-8 items-center justify-center rounded-full text-sm font-semibold",
                       accent.avatar,
+                      accent.avatarText,
                     )}
                   >
                     {row.name[0]?.toUpperCase()}
                   </span>
                   <h2 className="text-lg font-semibold">{row.name}</h2>
                   <Animal
-                    className={cn("ml-auto size-7", accent.animalColor)}
+                    className="ml-auto size-7 text-muted-foreground"
                     aria-hidden="true"
                   />
                 </CardHeader>

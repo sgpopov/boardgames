@@ -1,8 +1,13 @@
 import { BaseGame } from "@core/domain/entities/Game";
+import { AnimalIcon, PlayerColor } from "@/games/ark-nova/domain/constants";
 
 export interface ArkNovaPlayer {
   id: string;
   name: string;
+  // Chosen at creation, unique per game, fixed for the life of the game.
+  color: PlayerColor;
+  // Auto-assigned at random at creation, independent of color.
+  icon: AnimalIcon;
   // Raw end-of-game inputs. Unset until the scoring phase (see PRD #29 phase 2).
   appeal: number | null;
   conservationPoints: number | null;

@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import { useForm, useStore } from "@tanstack/react-form";
 import { addArkNovaScores } from "@/games/ark-nova/application/use-cases/addScores";
 import { ArkNovaGame } from "@/games/ark-nova/application/entities/ArkNovaGame";
+import { AnimalIcon, PlayerColor } from "@/games/ark-nova/domain/constants";
 import { useArkNovaRepo } from "@/games/ark-nova/ui/hooks/useArkNovaRepo";
 
 export interface ScoreRow {
   playerId: string;
   name: string;
+  color: PlayerColor;
+  icon: AnimalIcon;
   appeal: string;
   conservationPoints: string;
 }
@@ -59,6 +62,8 @@ export function useAddScores({ gameId, onScoresSaved }: HookProps) {
           data.players.map((player) => ({
             playerId: player.id,
             name: player.name,
+            color: player.color,
+            icon: player.icon,
             appeal: player.appeal === null ? "" : String(player.appeal),
             conservationPoints:
               player.conservationPoints === null

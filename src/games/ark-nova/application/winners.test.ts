@@ -16,6 +16,8 @@ const makePlayer = (
   return {
     id,
     name: id,
+    color: "blue",
+    icon: "bird",
     appeal,
     conservationPoints,
     officialVp,
@@ -66,6 +68,8 @@ describe("computeWinners", () => {
       {
         id: "p2",
         name: "p2",
+        color: "yellow",
+        icon: "fish",
         appeal: null,
         conservationPoints: null,
         officialVp: null,
@@ -83,6 +87,8 @@ describe("computeWinners", () => {
       {
         id: "p1",
         name: "p1",
+        color: "blue",
+        icon: "bird",
         appeal: null,
         conservationPoints: null,
         officialVp: null,

@@ -23,6 +23,8 @@ const scoredPlayer = (
   return {
     id,
     name: id,
+    color: "blue",
+    icon: "bird",
     appeal,
     conservationPoints,
     officialVp,
@@ -33,6 +35,8 @@ const scoredPlayer = (
 const unscoredPlayer = (id: string): ArkNovaPlayer => ({
   id,
   name: id,
+  color: "yellow",
+  icon: "fish",
   appeal: null,
   conservationPoints: null,
   officialVp: null,
