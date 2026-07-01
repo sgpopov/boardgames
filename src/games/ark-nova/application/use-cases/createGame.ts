@@ -37,7 +37,7 @@ export async function createArkNovaGame(
     id: p.id ?? generateId(),
     name: p.name,
     color: p.color,
-    icon: icons[index],
+    icon: icons[index % icons.length],
     appeal: null,
     conservationPoints: null,
     officialVp: null,
