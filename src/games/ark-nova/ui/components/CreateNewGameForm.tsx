@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, PlusIcon, UsersIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -38,7 +38,7 @@ export function CreateNewGameForm({ onGameCreated }: Props) {
             await form.handleSubmit();
           }}
         >
-          <div className="space-y-6 pb-10">
+          <div className="space-y-6 pb-6">
             {players.map((_, i) => (
               <div key={i} className="space-y-3">
                 <form.Field name={`players[${i}].name`}>
@@ -141,36 +141,39 @@ export function CreateNewGameForm({ onGameCreated }: Props) {
             ))}
           </div>
 
-          <div className="flex justify-between">
-            <Button
-              variant="secondary"
-              onClick={(e) => {
-                e.preventDefault();
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
 
-                addPlayer();
-              }}
-              disabled={players.length >= maxPlayers}
-            >
-              Add Player
-            </Button>
+              addPlayer();
+            }}
+            disabled={players.length >= maxPlayers}
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed py-3 text-sm font-semibold text-emerald-700 transition-colors hover:bg-emerald-50 disabled:pointer-events-none disabled:opacity-50"
+          >
+            <PlusIcon className="size-4" aria-hidden="true" />
+            Add player
+          </button>
 
-            <form.Subscribe
-              selector={(state) => [
-                state.canSubmit,
-                state.isPristine,
-                state.isSubmitting,
-              ]}
-            >
-              {([canSubmit, isPristine, isSubmitting]) => (
-                <Button
-                  type="submit"
-                  disabled={!canSubmit || isPristine || isSubmitting}
-                >
-                  {isSubmitting ? "Saving..." : "Create game"}
-                </Button>
-              )}
-            </form.Subscribe>
-          </div>
+          <form.Subscribe
+            selector={(state) => [
+              state.canSubmit,
+              state.isPristine,
+              state.isSubmitting,
+            ]}
+          >
+            {([canSubmit, isPristine, isSubmitting]) => (
+              <Button
+                type="submit"
+                disabled={!canSubmit || isPristine || isSubmitting}
+                className="mt-6 w-full bg-emerald-700 text-white hover:bg-emerald-800"
+                size="lg"
+              >
+                <UsersIcon className="size-4" aria-hidden="true" />
+                {isSubmitting ? "Saving..." : "Create game"}
+              </Button>
+            )}
+          </form.Subscribe>
         </form>
       </CardContent>
     </Card>
