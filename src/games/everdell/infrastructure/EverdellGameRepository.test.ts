@@ -10,6 +10,7 @@ const makePlayer = (details: Partial<EverdellPlayer> = {}): EverdellPlayer => {
   return {
     id: details.id ?? "batman",
     name: details.name ?? "James Bond",
+    character: details.character ?? "squirrel",
     total: details.total ?? 0,
     scores: details.scores ?? {
       base: {
@@ -148,5 +149,53 @@ describe("EverdellGameRepository", () => {
 
     expect(list.map((g) => g.id).sort()).toEqual(["good-1", "good-2"]);
     expect(await repo.getById("bad")).toBeUndefined();
+  });
+
+  it("loads a game stored before characters existed, assigning them", async () => {
+    const legacyGame = {
+      id: "legacy",
+      startedAt: new Date("2025-01-01").toISOString(),
+      completedAt: null,
+      players: [
+        {
+          id: "p1",
+          name: "James Bond",
+          total: 0,
+          scores: {
+            base: {
+              cards: 0,
+              prosperity: 0,
+              events: 0,
+              journey: 0,
+              tokens: 0,
+            },
+          },
+        },
+        {
+          id: "p2",
+          name: "Bruce Wayne",
+          total: 0,
+          scores: {
+            base: {
+              cards: 0,
+              prosperity: 0,
+              events: 0,
+              journey: 0,
+              tokens: 0,
+            },
+          },
+        },
+      ],
+    };
+
+    storage.write(STORAGE_KEY, [legacyGame]);
+
+    const stored = await repo.getById("legacy");
+
+    expect(stored).toBeDefined();
+    expect(stored!.players.map((p) => p.character)).toEqual([
+      "squirrel",
+      "turtle",
+    ]);
   });
 });

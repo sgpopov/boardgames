@@ -8,9 +8,9 @@ test.describe("Everdell Player Score Management", () => {
     await page.getByRole("button", { name: "Add Player" }).click();
     await page.getByRole("button", { name: "Add Player" }).click();
 
-    await page.getByLabel("Player 1").fill("James Bond");
-    await page.getByLabel("Player 2").fill("Bruce Wayne");
-    await page.getByLabel("Player 3").fill("Barry Allen");
+    await page.getByLabel("Player 1", { exact: true }).fill("James Bond");
+    await page.getByLabel("Player 2", { exact: true }).fill("Bruce Wayne");
+    await page.getByLabel("Player 3", { exact: true }).fill("Barry Allen");
 
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();

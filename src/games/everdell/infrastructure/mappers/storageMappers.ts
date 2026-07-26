@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { CHARACTERS } from "@/games/everdell/domain/constants";
+import { backfillCharacters } from "@/games/everdell/infrastructure/backfillCharacters";
 
 const BaseScoresSchema = z.object({
   cards: z.number().int().min(0),
@@ -12,6 +14,7 @@ const BaseScoresSchema = z.object({
 const PlayerSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
+  character: z.enum(CHARACTERS),
   total: z.number().int().min(0),
   scores: z.object({
     base: BaseScoresSchema,
@@ -25,8 +28,22 @@ const GameSchema = z.object({
   players: z.array(PlayerSchema),
 });
 
+function withCharacters(raw: unknown): unknown {
+  if (
+    typeof raw !== "object" ||
+    raw === null ||
+    !Array.isArray((raw as { players?: unknown }).players)
+  ) {
+    return raw;
+  }
+
+  const game = raw as { players: unknown[] };
+
+  return { ...game, players: backfillCharacters(game.players) };
+}
+
 export function fromStorage(raw: unknown): EverdellGame | null {
-  const parsed = GameSchema.safeParse(raw);
+  const parsed = GameSchema.safeParse(withCharacters(raw));
 
   return parsed.success ? parsed.data : null;
 }
