@@ -81,7 +81,7 @@ export function CreateNewGameForm({ onGameCreated }: Props) {
                         <div
                           role="group"
                           aria-label={`Player ${i + 1} character`}
-                          className="flex flex-wrap gap-2"
+                          className="grid max-w-md grid-cols-4 gap-2"
                         >
                           {CHARACTERS.map((character) => {
                             const { label, art } = artForCharacter(character);
@@ -97,15 +97,18 @@ export function CreateNewGameForm({ onGameCreated }: Props) {
                                 disabled={isDisabled}
                                 onClick={() => field.handleChange(character)}
                                 className={cn(
-                                  "flex flex-col items-center gap-1 rounded-xl border px-3 py-2 text-xs font-medium transition-colors",
+                                  "flex flex-col items-center gap-1 rounded-xl border px-1 pt-2 pb-1.5 text-xs font-medium transition-colors sm:px-2",
                                   isSelected
                                     ? "border-emerald-600 bg-emerald-50 text-emerald-900"
                                     : "bg-background text-foreground hover:bg-muted/50",
                                   isDisabled && "opacity-40 cursor-not-allowed",
                                 )}
                               >
+                                {/* The portraits differ in aspect ratio, so the
+                                    box is fixed and the art is contained inside
+                                    it, bottom-aligned to stand on a shared line. */}
                                 <Image
-                                  className="size-12"
+                                  className="h-16 w-full object-contain object-bottom sm:h-20"
                                   src={art}
                                   alt=""
                                   aria-hidden="true"

@@ -3,11 +3,10 @@
 import { StaticImageData } from "next/image";
 import { Character } from "@/games/everdell/domain/constants";
 
-// Next types SVG imports as `any`; the annotation below pins them back down.
-import squirrel from "@games/everdell/assets/characters/squirrel.svg";
-import turtle from "@games/everdell/assets/characters/turtle.svg";
-import mouse from "@games/everdell/assets/characters/mouse.svg";
-import hedgehog from "@games/everdell/assets/characters/hedgehog.svg";
+import squirrel from "@games/everdell/assets/characters/squirrel-no-trophy.png";
+import turtle from "@games/everdell/assets/characters/turtle-no-trophy.png";
+import mouse from "@games/everdell/assets/characters/mouse-no-trophy.png";
+import hedgehog from "@games/everdell/assets/characters/hedgehog-no-trophy.png";
 
 export interface CharacterArt {
   label: string;
