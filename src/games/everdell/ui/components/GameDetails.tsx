@@ -33,18 +33,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { buildScoreRows } from "@/games/everdell/ui/presenters/buildScoreRows";
+import { buildPodium } from "@/games/everdell/ui/presenters/buildPodium";
+import { PodiumScene } from "@/games/everdell/ui/components/PodiumScene";
 import { useGameDetails } from "@/games/everdell/ui/hooks/useGameDetails";
 import { useCompleteGame } from "@/games/everdell/ui/hooks/useCompleteGame";
-import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
 
 type GameDetailsProps = {
   gameId: string;
 };
-
-function getWinners(game: EverdellGame) {
-  const maxTotal = Math.max(...game.players.map((p) => p.total));
-  return game.players.filter((p) => p.total === maxTotal);
-}
 
 export function GameDetails(props: GameDetailsProps) {
   const { game, isFetching, modules, setGame } = useGameDetails(props.gameId);
@@ -63,6 +59,14 @@ export function GameDetails(props: GameDetailsProps) {
     return buildScoreRows(modules, game);
   }, [game, modules]);
 
+  const podiumRows = useMemo(() => {
+    if (!game || !game.completedAt) {
+      return [];
+    }
+
+    return buildPodium(game);
+  }, [game]);
+
   if (isFetching) {
     return <div className="p-5">Loading...</div>;
   }
@@ -71,9 +75,89 @@ export function GameDetails(props: GameDetailsProps) {
     return <div className="p-5">Game not found</div>;
   }
 
-  const winners = game.completedAt ? getWinners(game) : [];
-  const winnerNames = winners.map((w) => w.name).join(" & ");
-  const winnerIds = new Set(winners.map((w) => w.id));
+  const winnerNames = podiumRows
+    .filter((row) => row.isWinner)
+    .map((row) => row.player.name)
+    .join(" & ");
+
+  const scoreTable = (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">
+            Player
+          </TableHead>
+          {game.players.map((player) => (
+            <TableHead
+              key={player.id}
+              className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
+            >
+              {player.name[0]}
+            </TableHead>
+          ))}
+        </TableRow>
+      </TableHeader>
+
+      <TableBody>
+        {scoreRows.map((row) => (
+          <TableRow key={row.key}>
+            <TableCell className="py-4 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">
+              {game.completedAt ? (
+                <span className="flex items-center gap-x-2">
+                  {row.icon && (
+                    <Image
+                      className="h-6 w-6"
+                      src={row.icon as ImageProps["src"]}
+                      alt={row.key}
+                    />
+                  )}
+                  {row.title}
+                </span>
+              ) : (
+                <Link
+                  href={routes.everdell.score(props.gameId, row.key)}
+                  className="flex items-center gap-x-2"
+                  aria-label={`Edit score for ${row.title}`}
+                >
+                  {row.icon && (
+                    <Image
+                      className="h-6 w-6"
+                      src={row.icon as ImageProps["src"]}
+                      alt={row.key}
+                    />
+                  )}
+                  {row.title}
+                </Link>
+              )}
+            </TableCell>
+            {row.scores.map((score) => (
+              <TableCell key={score.key} className="text-center">
+                {score.value}
+              </TableCell>
+            ))}
+          </TableRow>
+        ))}
+      </TableBody>
+      <TableFooter>
+        <TableRow>
+          <TableCell className="py-3.5 pr-3 pl-4 text-left text-sm font-medium text-gray-900 sm:pl-0">
+            <div className="flex items-center gap-x-2">
+              <TrophyIcon className="h-6 w-6" aria-hidden="true" />
+              Total
+            </div>
+          </TableCell>
+          {game.players.map((player) => (
+            <TableCell
+              key={player.id}
+              className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
+            >
+              {player.total}
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableFooter>
+    </Table>
+  );
 
   return (
     <div className="lg:mt-5 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -116,97 +200,30 @@ export function GameDetails(props: GameDetailsProps) {
           )}
         </div>
 
-        <div className="-mx-4 mt-5 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0">
-                    Player
-                  </TableHead>
-                  {game.players.map((player) => (
-                    <TableHead
-                      key={player.id}
-                      className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900"
-                    >
-                      <span className="flex flex-col items-center gap-1">
-                        {player.name[0]}
-                        {game.completedAt && winnerIds.has(player.id) && (
-                          <>
-                            <TrophyIcon
-                              className="h-4 w-4 text-yellow-700"
-                              aria-hidden="true"
-                            />
-                            <span className="sr-only">Winner</span>
-                          </>
-                        )}
-                      </span>
-                    </TableHead>
-                  ))}
-                </TableRow>
-              </TableHeader>
+        {game.completedAt ? (
+          <div className="mt-5 lg:grid lg:grid-cols-5 lg:items-start lg:gap-6">
+            <div className="-mx-4 sm:-mx-6 lg:col-span-3 lg:mx-0">
+              <PodiumScene rows={podiumRows} />
+            </div>
 
-              <TableBody>
-                {scoreRows.map((row) => (
-                  <TableRow key={row.key}>
-                    <TableCell className="py-4 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">
-                      {game.completedAt ? (
-                        <span className="flex items-center gap-x-2">
-                          {row.icon && (
-                            <Image
-                              className="h-6 w-6"
-                              src={row.icon as ImageProps["src"]}
-                              alt={row.key}
-                            />
-                          )}
-                          {row.title}
-                        </span>
-                      ) : (
-                        <Link
-                          href={routes.everdell.score(props.gameId, row.key)}
-                          className="flex items-center gap-x-2"
-                          aria-label={`Edit score for ${row.title}`}
-                        >
-                          {row.icon && (
-                            <Image
-                              className="h-6 w-6"
-                              src={row.icon as ImageProps["src"]}
-                              alt={row.key}
-                            />
-                          )}
-                          {row.title}
-                        </Link>
-                      )}
-                    </TableCell>
-                    {row.scores.map((score) => (
-                      <TableCell key={score.key} className="text-center">
-                        {score.value}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell className="py-3.5 pr-3 pl-4 text-left text-sm font-medium text-gray-900 sm:pl-0">
-                    <div className="flex items-center gap-x-2">
-                      <TrophyIcon className="h-6 w-6" aria-hidden="true" />
-                      Total
-                    </div>
-                  </TableCell>
-                  {game.players.map((player) => (
-                    <TableCell
-                      key={player.id}
-                      className="px-3 py-3.5 text-center text-sm font-medium text-gray-900"
-                    >
-                      {player.total}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableFooter>
-            </Table>
+            <div className="mt-8 lg:col-span-2 lg:mt-0">
+              <h2 className="text-sm font-semibold text-gray-900">
+                Scores breakdown
+              </h2>
+              <div className="-mx-4 mt-3 overflow-x-auto sm:-mx-6 lg:mx-0">
+                <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-0">
+                  {scoreTable}
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="-mx-4 mt-5 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+              {scoreTable}
+            </div>
+          </div>
+        )}
       </div>
 
       <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
