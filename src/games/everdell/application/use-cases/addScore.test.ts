@@ -3,6 +3,7 @@ import { addScore } from "@/games/everdell/application/use-cases/addScore";
 import { completeGame } from "@/games/everdell/application/use-cases/completeGame";
 import { createEverdellGame } from "@/games/everdell/application/use-cases/createGame";
 import { EverdellGame } from "@/games/everdell/application/entities/EverdellGame";
+import { CHARACTERS } from "@/games/everdell/domain/constants";
 import { InMemoryEverdellRepo } from "@games/everdell/tests/mock-repository";
 import { GameAlreadyCompletedError } from "@core/domain/errors/GameAlreadyCompletedError";
 
@@ -11,7 +12,7 @@ function buildGameWithPlayers(names: string[]): Promise<EverdellGame> {
 
   return createEverdellGame(
     repo,
-    names.map((n) => ({ name: n })),
+    names.map((n, i) => ({ name: n, character: CHARACTERS[i] })),
   );
 }
 

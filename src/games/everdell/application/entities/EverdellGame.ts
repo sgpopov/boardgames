@@ -1,4 +1,5 @@
 import { BaseGame } from "@core/domain/entities/Game";
+import { Character } from "@/games/everdell/domain/constants";
 
 export type BaseGameScores = {
   cards: number;
@@ -11,6 +12,7 @@ export type BaseGameScores = {
 export interface EverdellPlayer {
   id: string;
   name: string;
+  character: Character;
   scores: {
     base: BaseGameScores;
   };

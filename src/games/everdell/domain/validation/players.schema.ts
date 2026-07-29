@@ -1,12 +1,14 @@
 import { z } from "zod";
 import { getDuplicateNameGroups } from "@core/domain/validation/uniqueNames";
-import { MAX_PLAYERS_ALLOWED } from "../constants";
+import { CHARACTERS, MAX_PLAYERS_ALLOWED } from "../constants";
+import { getDuplicateCharacterGroups } from "./uniqueCharacters";
 
 export const PlayersSchema = z.object({
   players: z
     .array(
       z.object({
         name: z.string().min(1, "Required"),
+        character: z.enum(CHARACTERS, { message: "Required" }),
       }),
     )
     .min(1, "At least one player")
@@ -23,11 +25,21 @@ export const PlayersSchema = z.object({
           });
         }
       }
+
+      for (const indices of getDuplicateCharacterGroups(players)) {
+        for (const idx of indices) {
+          ctx.addIssue({
+            code: "custom",
+            path: [idx, "character"],
+            message: "Each character can be used only once.",
+          });
+        }
+      }
     }),
 });
 
 export type NewPlayersInput = z.infer<typeof PlayersSchema>;
 
-export function validatePlayers(input: NewPlayersInput) {
+export function validatePlayers(input: unknown) {
   return PlayersSchema.safeParse(input);
 }

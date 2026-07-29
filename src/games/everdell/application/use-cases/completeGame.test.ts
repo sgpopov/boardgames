@@ -10,29 +10,29 @@ describe("completeGame", () => {
     const repo = new InMemoryEverdellRepo(null);
 
     await expect(
-      completeGame({ repository: repo, gameId: "missing-id" })
+      completeGame({ repository: repo, gameId: "missing-id" }),
     ).rejects.toThrow(GameNotFoundError);
   });
 
   it("should throw GameAlreadyCompletedError when game is already completed", async () => {
     const repo = new InMemoryEverdellRepo(null);
     const game = await createEverdellGame(repo, [
-      { name: "Alice" },
-      { name: "Bob" },
+      { name: "Alice", character: "squirrel" },
+      { name: "Bob", character: "turtle" },
     ]);
 
     await completeGame({ repository: repo, gameId: game.id });
 
     await expect(
-      completeGame({ repository: repo, gameId: game.id })
+      completeGame({ repository: repo, gameId: game.id }),
     ).rejects.toThrow(GameAlreadyCompletedError);
   });
 
   it("should set completedAt and persist the game", async () => {
     const repo = new InMemoryEverdellRepo(null);
     const game = await createEverdellGame(repo, [
-      { name: "Alice" },
-      { name: "Bob" },
+      { name: "Alice", character: "squirrel" },
+      { name: "Bob", character: "turtle" },
     ]);
     const fixedNow = "2026-03-10T12:00:00.000Z";
 
@@ -51,8 +51,8 @@ describe("completeGame", () => {
   it("should not modify players or other game fields when completing", async () => {
     const repo = new InMemoryEverdellRepo(null);
     const game = await createEverdellGame(repo, [
-      { name: "Alice" },
-      { name: "Bob" },
+      { name: "Alice", character: "squirrel" },
+      { name: "Bob", character: "turtle" },
     ]);
 
     const updated = await completeGame({ repository: repo, gameId: game.id });

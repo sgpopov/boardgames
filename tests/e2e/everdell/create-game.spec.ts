@@ -23,9 +23,9 @@ test.describe("Everdell - Create game", () => {
     await page.getByRole("button", { name: "Add Player" }).click();
 
     // Fill player names
-    await page.getByLabel("Player 1").fill("James Bond");
-    await page.getByLabel("Player 2").fill("Bruce Wayne");
-    await page.getByLabel("Player 3").fill("Barry Allen");
+    await page.getByLabel("Player 1", { exact: true }).fill("James Bond");
+    await page.getByLabel("Player 2", { exact: true }).fill("Bruce Wayne");
+    await page.getByLabel("Player 3", { exact: true }).fill("Barry Allen");
 
     await page.keyboard.press("Tab");
 
@@ -85,6 +85,58 @@ test.describe("Everdell - Create game", () => {
       "0",
       "0",
       "0",
+    ]);
+  });
+
+  test("assigns a character to every player and keeps it unique", async ({
+    page,
+  }) => {
+    await page.goto("/games/everdell/create-game");
+
+    const player1 = page.getByRole("group", { name: "Player 1 character" });
+
+    await expect(
+      player1.getByRole("button", { name: "Squirrel" }),
+    ).toHaveAttribute("aria-pressed", "true");
+
+    await page.getByRole("button", { name: "Add Player" }).click();
+
+    const player2 = page.getByRole("group", { name: "Player 2 character" });
+
+    await expect(
+      player2.getByRole("button", { name: "Turtle" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(
+      player2.getByRole("button", { name: "Squirrel" }),
+    ).toBeDisabled();
+
+    await player2.getByRole("button", { name: "Hedgehog" }).click();
+
+    await expect(
+      player2.getByRole("button", { name: "Hedgehog" }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(player1.getByRole("button", { name: "Turtle" })).toBeEnabled();
+
+    await page.getByLabel("Player 1", { exact: true }).fill("James Bond");
+    await page.getByLabel("Player 2", { exact: true }).fill("Bruce Wayne");
+
+    await page.getByRole("button", { name: "Create game" }).click();
+    await expect(page).toHaveURL(/\/games\/everdell\/game\?id=/);
+
+    await page.reload();
+
+    // Characters have no on-screen surface until the podium ships, so stored
+    // state is the only place to observe that the choices survived a reload.
+    const stored = await page.evaluate(() =>
+      window.localStorage.getItem("boardgames:everdell:games"),
+    );
+    const games = JSON.parse(stored ?? "[]") as {
+      players: { name: string; character: string }[];
+    }[];
+
+    expect(games[0].players).toMatchObject([
+      { name: "James Bond", character: "squirrel" },
+      { name: "Bruce Wayne", character: "hedgehog" },
     ]);
   });
 });

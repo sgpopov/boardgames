@@ -8,9 +8,9 @@ test.describe("Everdell Game Details", () => {
     await page.getByRole("button", { name: "Add Player" }).click();
     await page.getByRole("button", { name: "Add Player" }).click();
 
-    await page.getByLabel("Player 1").fill("Alice");
-    await page.getByLabel("Player 2").fill("Bob");
-    await page.getByLabel("Player 3").fill("Carol");
+    await page.getByLabel("Player 1", { exact: true }).fill("Alice");
+    await page.getByLabel("Player 2", { exact: true }).fill("Bob");
+    await page.getByLabel("Player 3", { exact: true }).fill("Carol");
 
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();

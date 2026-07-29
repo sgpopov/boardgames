@@ -30,8 +30,8 @@ test.describe("Everdell - Games list", () => {
     await page.getByRole("link", { name: "Create new game" }).click();
 
     await page.getByRole("button", { name: "Add Player" }).click();
-    await page.getByLabel("Player 1").fill("James Bond");
-    await page.getByLabel("Player 2").fill("Bruce Wayne");
+    await page.getByLabel("Player 1", { exact: true }).fill("James Bond");
+    await page.getByLabel("Player 2", { exact: true }).fill("Bruce Wayne");
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();
     await page.waitForURL(/\/games\/everdell\/game\?id=/);
@@ -47,8 +47,8 @@ test.describe("Everdell - Games list", () => {
     await page.getByRole("link", { name: "Create new game" }).click();
 
     await page.getByRole("button", { name: "Add Player" }).click();
-    await page.getByLabel("Player 1").fill("James Bond");
-    await page.getByLabel("Player 2").fill("Bruce Wayne");
+    await page.getByLabel("Player 1", { exact: true }).fill("James Bond");
+    await page.getByLabel("Player 2", { exact: true }).fill("Bruce Wayne");
     await page.keyboard.press("Tab");
     await page.getByRole("button", { name: "Create game" }).click();
     await page.waitForURL(/\/games\/everdell\/game\?id=/);

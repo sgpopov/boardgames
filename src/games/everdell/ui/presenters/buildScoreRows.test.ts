@@ -1,7 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { buildScoreRows } from "./buildScoreRows";
 
-import type { EverdellGame, EverdellPlayer } from "@/games/everdell/application/entities/EverdellGame";
+import type {
+  EverdellGame,
+  EverdellPlayer,
+} from "@/games/everdell/application/entities/EverdellGame";
 import type { GameModule } from "@/games/everdell/application/entities/GameModules";
 
 describe("buildScoreRows", () => {
@@ -9,6 +12,7 @@ describe("buildScoreRows", () => {
     {
       id: "p1",
       name: "Alice",
+      character: "squirrel",
       scores: {
         base: {
           cards: 1,
@@ -23,6 +27,7 @@ describe("buildScoreRows", () => {
     {
       id: "p2",
       name: "Bob",
+      character: "turtle",
       scores: {
         base: {
           cards: 1,

@@ -21,8 +21,23 @@ type UseCreateGamePlayersFormOptions<
   createGame: (players: TPlayerRow[]) => Promise<TGame>;
   onGameCreated: (game: TGame) => void;
   // Override for player rows with fields beyond `name` (e.g. Ark Nova's color).
-  createDefaultPlayer?: () => TPlayerRow;
+  // Receives the rows that already exist, so a default can depend on them —
+  // Everdell pre-fills each new slot with a Character no one has taken.
+  createDefaultPlayer?: (existing: TPlayerRow[]) => TPlayerRow;
 };
+
+function buildInitialPlayers<TPlayerRow>(
+  count: number,
+  createDefaultPlayer: (existing: TPlayerRow[]) => TPlayerRow,
+): TPlayerRow[] {
+  const players: TPlayerRow[] = [];
+
+  for (let i = 0; i < count; i++) {
+    players.push(createDefaultPlayer(players));
+  }
+
+  return players;
+}
 
 export function useCreateGamePlayersForm<
   TGame,
@@ -37,7 +52,7 @@ export function useCreateGamePlayersForm<
 }: UseCreateGamePlayersFormOptions<TGame, TPlayerRow>) {
   const form = useForm({
     defaultValues: {
-      players: Array.from({ length: defaultPlayerCount }, createDefaultPlayer),
+      players: buildInitialPlayers(defaultPlayerCount, createDefaultPlayer),
     },
     // No onBlur validator: it would stamp a stale error onto whichever field
     // hasn't fired handleBlur yet (e.g. a button-based picker), and never
@@ -65,18 +80,15 @@ export function useCreateGamePlayersForm<
     },
   });
 
-  const players = useStore(
-    form.store,
-    (s) => s.values.players,
-  ) as TPlayerRow[];
+  const players = useStore(form.store, (s) => s.values.players) as TPlayerRow[];
 
   const addPlayer = useCallback(() => {
     if (players.length >= maxPlayers) {
       return;
     }
 
-    form.pushFieldValue("players", createDefaultPlayer() as never);
-  }, [form, maxPlayers, players.length, createDefaultPlayer]);
+    form.pushFieldValue("players", createDefaultPlayer(players) as never);
+  }, [form, maxPlayers, players, createDefaultPlayer]);
 
   return {
     form,
