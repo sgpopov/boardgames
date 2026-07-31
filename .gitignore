@@ -46,3 +46,6 @@ next-env.d.ts
 
 # Code Claude
 .claude/settings.local.json
+
+# Codex
+.codex/

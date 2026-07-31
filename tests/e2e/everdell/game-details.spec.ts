@@ -124,10 +124,10 @@ test.describe("Everdell Game Details", () => {
     expect(scanResults.violations).toEqual([]);
   });
 
-  test("shows trophy icon for the winner in the totals row", async ({
+  test("shows the podium with the winner distinguishable and totals correct", async ({
     page,
   }) => {
-    // Bob wins
+    // Bob wins, Carol is second, Alice is third
     await page.getByRole("link", { name: "Edit score for Prosperity" }).click();
     await page.getByTestId("player-0-score").fill("10");
     await page.getByTestId("player-1-score").fill("40");
@@ -140,7 +140,22 @@ test.describe("Everdell Game Details", () => {
     await page.getByRole("button", { name: "Complete game" }).click();
     await expect(page.getByText("Bob wins!")).toBeVisible();
 
-    // winner sr-only text should be present in the DOM for the winner's cell
-    await expect(page.getByText("Winner")).toHaveCount(1)
+    const podium = page.getByRole("region", { name: "Podium" });
+    await expect(podium).toBeVisible();
+
+    // each stump's full name, rank and total is available as text for
+    // assistive technology, independent of the graphical rank/initial
+    await expect(
+      podium.getByText(/^Bob — rank 1, total 40, winner$/),
+    ).toBeAttached();
+    await expect(
+      podium.getByText(/^Carol — rank 2, total 25$/),
+    ).toBeAttached();
+    await expect(
+      podium.getByText(/^Alice — rank 3, total 10$/),
+    ).toBeAttached();
+
+    // the breakdown table's own column headers stay plain initials
+    await expect(page.getByRole("columnheader", { name: "B" })).toBeVisible();
   });
 });
