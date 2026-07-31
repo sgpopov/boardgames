@@ -33,21 +33,15 @@ export function PodiumScene({ rows }: PodiumSceneProps) {
       {/* Base gradient - always renders, even if the forest image below fails to load. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-sky-100 via-emerald-50 to-emerald-100"
+        className="absolute inset-0 bg-linear-to-b from-sky-100 via-emerald-50 to-emerald-100"
       />
       {/* Plain CSS background-image rather than next/image: a failed load just
           leaves the gradient above visible, with no broken-image glyph. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 scale-105 bg-cover bg-center"
+        className="absolute inset-0 scale-125 bg-cover bg-center"
         style={{ backgroundImage: `url(${forestBackground.src})` }}
       />
-      {/* Ground fades to the page's own background, so the scores sit on
-          plain background rather than on top of the scene artwork. */}
-      {/* <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-gray-100 via-gray-100/50 to-transparent"
-      /> */}
 
       <ul className="relative flex items-start justify-center gap-3 px-4 pt-10 pb-4 sm:gap-4">
         {rows.map((row) => (
@@ -67,11 +61,11 @@ function PodiumStump({ row }: { row: PodiumRow }) {
 
   return (
     <li className="flex flex-col items-center">
-      {/* The podium itself - character standing on its stump - is the only
-          part lifted by rank; the score below stays on one common baseline
-          so totals are easy to compare at a glance. */}
       <div className="flex flex-col items-center align-bottom">
-        <span aria-hidden="true" className="text-lg font-bold text-white">
+        <span
+          aria-hidden="true"
+          className="rounded-full bg-amber-900/55 px-2 py-0.5 text-lg font-bold text-white shadow-[0_0_14px_rgba(120,72,24,0.65)] ring-1 ring-amber-700/45 backdrop-blur-[1px]"
+        >
           {row.player.name[0]}
         </span>
 
@@ -99,7 +93,10 @@ function PodiumStump({ row }: { row: PodiumRow }) {
         </div>
       </div>
 
-      <span aria-hidden="true" className="text-xl font-extrabold text-white">
+      <span
+        aria-hidden="true"
+        className="rounded-full bg-amber-900/55 px-2 py-0.5 text-xl font-extrabold text-white shadow-[0_0_14px_rgba(120,72,24,0.65)] ring-1 ring-amber-700/45 backdrop-blur-[1px]"
+      >
         {row.total}
       </span>
 

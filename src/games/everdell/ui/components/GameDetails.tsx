@@ -174,7 +174,9 @@ export function GameDetails(props: GameDetailsProps) {
       <div className="mt-8 flow-root">
         <div className="flex items-start justify-between">
           <div className="sm:flex-auto">
-            <h1 className="font-semibold text-gray-900">Score</h1>
+            <h1 className="sr-only font-semibold text-gray-900 lg:not-sr-only">
+              Score
+            </h1>
 
             {!game.completedAt && (
               <p className="mt-2 text-sm text-gray-700">
@@ -201,7 +203,7 @@ export function GameDetails(props: GameDetailsProps) {
         </div>
 
         {game.completedAt ? (
-          <div className="mt-5 lg:grid lg:grid-cols-5 lg:items-start lg:gap-6">
+          <div className="lg:mt-5 lg:grid lg:grid-cols-5 lg:items-start lg:gap-6">
             <div className="-mx-4 sm:-mx-6 lg:col-span-3 lg:mx-0">
               <PodiumScene rows={podiumRows} />
             </div>
