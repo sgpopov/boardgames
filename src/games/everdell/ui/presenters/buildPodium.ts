@@ -37,5 +37,5 @@ export function buildPodium(game: EverdellGame): PodiumRow[] {
         isWinner: rank === 1,
       };
     })
-    .sort((a, b) => a.rank - b.rank);
+    .sort((a, b) => a.rank - b.rank || a.player.name.localeCompare(b.player.name));
 }

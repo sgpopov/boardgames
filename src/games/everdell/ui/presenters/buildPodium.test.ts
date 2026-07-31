@@ -182,4 +182,21 @@ describe("buildPodium", () => {
     expect(rowsFromAscending).toEqual(["p4", "p3", "p2", "p1"]);
     expect(rowsFromDescending).toEqual(["p4", "p3", "p2", "p1"]);
   });
+
+  it("orders tied players by name, regardless of the order they were created in", () => {
+    const created = makeGame([
+      makePlayer("p1", "Bob", "hedgehog", 52),
+      makePlayer("p2", "Alice", "squirrel", 52),
+    ]);
+    const createdReversed = makeGame([
+      makePlayer("p2", "Alice", "squirrel", 52),
+      makePlayer("p1", "Bob", "hedgehog", 52),
+    ]);
+
+    const rowsFromCreated = buildPodium(created).map((r) => r.player.id);
+    const rowsFromReversed = buildPodium(createdReversed).map((r) => r.player.id);
+
+    expect(rowsFromCreated).toEqual(["p2", "p1"]);
+    expect(rowsFromReversed).toEqual(["p2", "p1"]);
+  });
 });
