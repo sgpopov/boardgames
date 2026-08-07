@@ -46,4 +46,4 @@ export const GAME_MODULES: GameModuleDescriptor[] = [
     image: arkNovaBanner,
     route: routes.arkNova.list(),
   },
-];
+].sort((a, b) => a.name.localeCompare(b.name));
