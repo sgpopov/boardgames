@@ -13,6 +13,14 @@ export interface GameModuleDescriptor {
   route: string;
 }
 
+// Locale is pinned so every visitor sees the same order: this module is
+// evaluated in the browser, so a bare localeCompare() would collate against
+// whatever locale the visitor's runtime happens to default to.
+const collator = new Intl.Collator("en", { numeric: true });
+
+export const compareGameNames = (a: string, b: string): number =>
+  collator.compare(a, b);
+
 export const GAME_MODULES: GameModuleDescriptor[] = [
   {
     id: "phase10",
@@ -46,4 +54,4 @@ export const GAME_MODULES: GameModuleDescriptor[] = [
     image: arkNovaBanner,
     route: routes.arkNova.list(),
   },
-];
+].sort((a, b) => compareGameNames(a.name, b.name));
